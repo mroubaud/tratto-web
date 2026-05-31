@@ -1,0 +1,17 @@
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# Editores
+.vscode/
+.idea/
+*.swp
+
+# Artefactos / backups
+*.zip
+files-backup.zip
+
+# Logs
+*.log
