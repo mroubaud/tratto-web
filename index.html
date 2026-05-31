@@ -41,7 +41,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png" />
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
-<meta name="theme-color" content="#a52326" />
+<meta name="theme-color" content="#891e1e" />
 
 <!-- ===== SCHEMA.ORG · Datos estructurados para Google ===== -->
 <script type="application/ld+json">
@@ -52,7 +52,7 @@
   "alternateName": "Tratto",
   "description": "Pasta fresca artesanal en el Centro de Montevideo. Fetuccini casero hecho a mano con salsas caseras.",
   "image": "https://pastastratto.com/og-image.jpg",
-  "logo": "https://pastastratto.com/tratto-logo.jpeg",
+  "logo": "https://pastastratto.com/tratto-logo.svg",
   "url": "https://pastastratto.com/",
   "telephone": "+598098301493",
   "servesCuisine": ["Italiana", "Pastas frescas"],
@@ -126,18 +126,40 @@
 </script>
 
 <!-- ===== FUENTES ===== -->
+<!-- Manrope (párrafos) desde Google Fonts · Ribes (títulos) auto-alojada -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="preload" href="fonts/Ribes-Black.woff2" as="font" type="font/woff2" crossorigin />
 <style>
+  /* ===== TIPOGRAFÍA DE MARCA · Ribes (títulos) ===== */
+  @font-face{
+    font-family: 'Ribes';
+    src: url('fonts/Ribes-Light.woff2') format('woff2');
+    font-weight: 300; font-style: normal; font-display: swap;
+  }
+  @font-face{
+    font-family: 'Ribes';
+    src: url('fonts/Ribes-Regular.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+  }
+  @font-face{
+    font-family: 'Ribes';
+    src: url('fonts/Ribes-Black.woff2') format('woff2');
+    font-weight: 900; font-style: normal; font-display: swap;
+  }
+
   :root{
-    --rojo: #a52326;
-    --rojo-oscuro: #7a1719;
-    --rojo-suave: #c44a4d;
-    --crema: #f5ede0;
-    --crema-claro: #fbf7ee;
-    --tinta: #2a1d18;
-    --papel: #f8f1e3;
+    /* Paleta oficial (Manual de Marca Tratto) */
+    --rojo: #891e1e;          /* Bordó · color principal · Pantone 181 C */
+    --rojo-oscuro: #6e1717;   /* Bordó oscuro · estados hover */
+    --rojo-suave: #ea7575;    /* Coral · secundario · Pantone 170 C */
+    --amarillo: #fbf2b3;      /* Amarillo crema · acento · Pantone 7401 C */
+    --celeste: #9fbaff;       /* Celeste · acento · Pantone 2717 C */
+    --crema: #fbf2b3;         /* Fondo sección carta (amarillo crema) */
+    --crema-claro: #fffdf5;   /* Casi blanco cálido · tarjetas / texto sobre bordó */
+    --tinta: #2a1d18;         /* Texto */
+    --papel: #f8f1e3;         /* Fondo general (papel) */
   }
 
   *{box-sizing:border-box;margin:0;padding:0;}
@@ -145,19 +167,19 @@
   html{scroll-behavior:smooth;}
 
   body{
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Manrope', system-ui, -apple-system, sans-serif;
     background: var(--papel);
     color: var(--tinta);
     line-height: 1.6;
     overflow-x: hidden;
     /* textura sutil de papel */
     background-image:
-      radial-gradient(circle at 20% 30%, rgba(165,35,38,0.04) 0%, transparent 40%),
-      radial-gradient(circle at 80% 70%, rgba(165,35,38,0.03) 0%, transparent 40%),
+      radial-gradient(circle at 20% 30%, rgba(137,30,30,0.04) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(137,30,30,0.03) 0%, transparent 40%),
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' /%3E%3CfeColorMatrix values='0 0 0 0 0.3 0 0 0 0 0.2 0 0 0 0 0.1 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  .manuscrita{ font-family: 'Caveat', cursive; }
+  .manuscrita{ font-family: 'Ribes', sans-serif; }
 
   /* ---------- NAV ---------- */
   nav{
@@ -171,7 +193,7 @@
     background: rgba(248, 241, 227, 0.92);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(165,35,38,0.12);
+    border-bottom: 1px solid rgba(137,30,30,0.12);
     transition: padding .3s ease;
   }
   nav .logo-mini{
@@ -184,7 +206,7 @@
     gap: 38px;
   }
   nav ul a{
-    font-family: 'Caveat', cursive;
+    font-family: 'Ribes', sans-serif;
     font-size: 22px;
     color: var(--tinta);
     text-decoration: none;
@@ -207,7 +229,7 @@
     color: var(--crema-claro) !important;
     padding: 8px 20px;
     border-radius: 30px;
-    font-family: 'Caveat', cursive;
+    font-family: 'Ribes', sans-serif;
     font-size: 20px !important;
     transition: transform .25s, background .25s;
     text-decoration: none;
@@ -252,7 +274,7 @@
   }
 
   .hero-tagline{
-    font-family: 'Caveat', cursive;
+    font-family: 'Ribes', sans-serif;
     font-size: clamp(28px, 4vw, 42px);
     color: var(--rojo);
     margin-bottom: 14px;
@@ -261,7 +283,7 @@
   }
 
   .hero-sub{
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Manrope', sans-serif;
     font-style: italic;
     font-size: clamp(18px, 2vw, 22px);
     color: var(--tinta);
@@ -280,7 +302,7 @@
   }
 
   .btn-primary, .btn-secondary{
-    font-family: 'Caveat', cursive;
+    font-family: 'Ribes', sans-serif;
     font-size: 24px;
     padding: 14px 32px;
     border-radius: 40px;
@@ -294,12 +316,12 @@
   .btn-primary{
     background: var(--rojo);
     color: var(--crema-claro);
-    box-shadow: 0 6px 20px rgba(165,35,38,0.25);
+    box-shadow: 0 6px 20px rgba(137,30,30,0.25);
   }
   .btn-primary:hover{
     background: var(--rojo-oscuro);
     transform: translateY(-3px);
-    box-shadow: 0 10px 24px rgba(165,35,38,0.35);
+    box-shadow: 0 10px 24px rgba(137,30,30,0.35);
   }
   .btn-secondary{
     background: transparent;
@@ -325,7 +347,7 @@
   }
 
   .section-title{
-    font-family: 'Caveat', cursive;
+    font-family: 'Ribes', sans-serif;
     font-size: clamp(48px, 6vw, 72px);
     color: var(--rojo);
     text-align: center;
@@ -333,7 +355,7 @@
     transform: rotate(-1deg);
   }
   .section-subtitle{
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Manrope', sans-serif;
     font-style: italic;
     font-size: 20px;
     text-align: center;
@@ -363,7 +385,7 @@
     color: var(--tinta);
   }
   .historia .firma{
-    font-family: 'Caveat', cursive;
+    font-family: 'Ribes', sans-serif;
     font-size: 32px;
     color: var(--rojo);
     margin-top: 30px;
@@ -402,27 +424,27 @@
     border-radius: 4px;
     box-shadow:
       0 1px 3px rgba(0,0,0,0.04),
-      0 10px 25px rgba(165,35,38,0.07);
+      0 10px 25px rgba(137,30,30,0.07);
     position: relative;
     transition: transform .3s ease, box-shadow .3s ease;
-    border: 1px solid rgba(165,35,38,0.1);
+    border: 1px solid rgba(137,30,30,0.1);
   }
   .menu-card:hover{
     transform: translateY(-6px) rotate(-0.5deg);
     box-shadow:
       0 4px 8px rgba(0,0,0,0.06),
-      0 18px 40px rgba(165,35,38,0.15);
+      0 18px 40px rgba(137,30,30,0.15);
   }
 
   .menu-card h3{
-    font-family: 'Caveat', cursive;
+    font-family: 'Ribes', sans-serif;
     font-size: 38px;
     color: var(--rojo);
     margin-bottom: 6px;
     transform: rotate(-1deg);
   }
   .menu-card .categoria{
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Manrope', sans-serif;
     font-style: italic;
     font-size: 14px;
     text-transform: uppercase;
@@ -435,10 +457,10 @@
     list-style: none;
   }
   .menu-card li{
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Manrope', sans-serif;
     font-size: 19px;
     padding: 10px 0;
-    border-bottom: 1px dashed rgba(165,35,38,0.18);
+    border-bottom: 1px dashed rgba(137,30,30,0.18);
     color: var(--tinta);
   }
   .menu-card li:last-child{ border-bottom: none; }
@@ -461,7 +483,7 @@
     right: 20px;
     background: var(--rojo);
     color: var(--crema-claro);
-    font-family: 'Caveat', cursive;
+    font-family: 'Ribes', sans-serif;
     font-size: 20px;
     padding: 4px 16px;
     border-radius: 20px;
@@ -480,13 +502,13 @@
     margin-right: auto;
   }
   .combina h4{
-    font-family: 'Caveat', cursive;
+    font-family: 'Ribes', sans-serif;
     font-size: 32px;
     color: var(--rojo);
     margin-bottom: 10px;
   }
   .combina p{
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Manrope', sans-serif;
     font-style: italic;
     font-size: 18px;
     color: var(--tinta);
@@ -507,11 +529,11 @@
   .info-item{
     margin-bottom: 30px;
     padding-bottom: 24px;
-    border-bottom: 1px solid rgba(165,35,38,0.15);
+    border-bottom: 1px solid rgba(137,30,30,0.15);
   }
   .info-item:last-child{ border-bottom: none; }
   .info-item h4{
-    font-family: 'Caveat', cursive;
+    font-family: 'Ribes', sans-serif;
     font-size: 30px;
     color: var(--rojo);
     margin-bottom: 8px;
@@ -520,7 +542,7 @@
     gap: 10px;
   }
   .info-item p{
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Manrope', sans-serif;
     font-size: 19px;
     color: var(--tinta);
     line-height: 1.6;
@@ -536,7 +558,7 @@
   .mapa-bloque{
     border-radius: 6px;
     overflow: hidden;
-    box-shadow: 0 12px 30px rgba(165,35,38,0.18);
+    box-shadow: 0 12px 30px rgba(137,30,30,0.18);
     height: 420px;
     border: 4px solid var(--crema-claro);
   }
@@ -594,11 +616,11 @@
   }
   footer .footer-logo{
     height: 70px;
-    filter: brightness(0) invert(1) opacity(0.95);
+    opacity: 0.95;
     margin-bottom: 20px;
   }
   footer .footer-tag{
-    font-family: 'Caveat', cursive;
+    font-family: 'Ribes', sans-serif;
     font-size: 28px;
     margin-bottom: 30px;
   }
@@ -618,7 +640,7 @@
     opacity: 1;
   }
   footer .copy{
-    font-family: 'DM Mono', monospace;
+    font-family: 'Manrope', sans-serif;
     font-size: 13px;
     opacity: 0.7;
     letter-spacing: 1px;
@@ -662,7 +684,7 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#inicio"><img src="tratto-logo.jpeg" alt="Tratto Pastas - Pasta fresca artesanal Montevideo" class="logo-mini" /></a>
+  <a href="#inicio"><img src="tratto-logo.svg" alt="Tratto Pastas - Pasta fresca artesanal Montevideo" class="logo-mini" /></a>
   <ul>
     <li><a href="#historia">historia</a></li>
     <li><a href="#carta">la carta</a></li>
@@ -690,7 +712,7 @@
     <path d="M15 40 Q 30 20, 45 40 T 75 40 T 105 40" />
   </svg>
 
-  <img src="tratto-logo.jpeg" alt="Tratto Pastas - Pasta fresca artesanal en el Centro de Montevideo" class="hero-logo" />
+  <img src="tratto-logo.svg" alt="Tratto Pastas - Pasta fresca artesanal en el Centro de Montevideo" class="hero-logo" />
   <h1 class="hero-tagline">pasta fresca, hecha a mano</h1>
   <p class="hero-sub">En pleno centro de Montevideo. Fetuccini al momento, salsas caseras, y todo el sabor de una buena pastalada.</p>
 
@@ -735,7 +757,7 @@
           <span class="item-desc">Amasado todos los días, cortado a la antigua</span>
         </li>
       </ul>
-      <p style="margin-top:18px; font-family:'Cormorant Garamond', serif; font-style:italic; font-size:17px; opacity:0.7;">
+      <p style="margin-top:18px; font-family:'Manrope', sans-serif; font-style:italic; font-size:17px; opacity:0.7;">
         Elegí tu salsa y add ons para armar tu plato →
       </p>
     </div>
@@ -853,7 +875,7 @@
 
 <!-- FOOTER -->
 <footer>
-  <img src="tratto-logo.jpeg" alt="Tratto Pastas Montevideo" class="footer-logo" />
+  <img src="tratto-logo-blanco.svg" alt="Tratto Pastas Montevideo" class="footer-logo" />
   <p class="footer-tag">la pasta como debe ser</p>
 
   <div class="social-row">
