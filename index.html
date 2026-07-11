@@ -6,7 +6,7 @@
 
 <!-- ===== SEO BÁSICO ===== -->
 <title>Tratto Pastas · Pasta fresca artesanal en Montevideo Centro</title>
-<meta name="description" content="Pasta fresca artesanal en el Centro de Montevideo. Fetuccini casero hecho a mano con salsas caseras: fileto, ragú, pesto, alfredo, carusso, pollo a la crema. Retiro en local · Pedidos por WhatsApp." />
+<meta name="description" content="Pasta fresca artesanal en el Centro de Montevideo. Armá tu plato: fetuccini, capellaccis y capelletis caseros con salsas a elección (pomodoro, ragú, hongos, pesto, salsa rosa). Retiro en local · Pedidos por WhatsApp." />
 <meta name="keywords" content="pasta fresca Montevideo, fetuccini artesanal, pastas caseras Centro Montevideo, pastería Uruguay, pasta para llevar Montevideo, Tratto pastas" />
 <meta name="author" content="Tratto Pastas" />
 <meta name="robots" content="index, follow" />
@@ -88,33 +88,53 @@
     "hasMenuSection": [
       {
         "@type": "MenuSection",
-        "name": "Pasta fresca",
-        "hasMenuItem": [{
-          "@type": "MenuItem",
-          "name": "Fetuccini casero",
-          "description": "Amasado todos los días, cortado a la antigua"
-        }]
+        "name": "Elegí tu pasta",
+        "hasMenuItem": [
+          {"@type":"MenuItem","name":"Fetuccini Alfredo","offers":{"@type":"Offer","price":"250","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Capellaccis de calabaza","offers":{"@type":"Offer","price":"310","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Capelletis de hongos","offers":{"@type":"Offer","price":"360","priceCurrency":"UYU"}}
+        ]
       },
       {
         "@type": "MenuSection",
-        "name": "Salsas caseras",
+        "name": "Sumá tu salsa",
         "hasMenuItem": [
-          {"@type":"MenuItem","name":"Alfredo","description":"Salsa base, manteca y queso"},
-          {"@type":"MenuItem","name":"Carusso","description":"Crema, jamón, nueces y champiñones"},
-          {"@type":"MenuItem","name":"Fileto","description":"Tomate fresco, ajo, albahaca"},
-          {"@type":"MenuItem","name":"Pollo a la crema"},
-          {"@type":"MenuItem","name":"Ragú","description":"Cocción lenta, sabor profundo"},
-          {"@type":"MenuItem","name":"Pesto","description":"Albahaca, piñones, parmesano"}
+          {"@type":"MenuItem","name":"Pomodoro","offers":{"@type":"Offer","price":"120","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Ragú de carne","offers":{"@type":"Offer","price":"160","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Salsa de hongos","offers":{"@type":"Offer","price":"140","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Pesto de albahaca","offers":{"@type":"Offer","price":"160","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Salsa rosa","offers":{"@type":"Offer","price":"130","priceCurrency":"UYU"}}
+        ]
+      },
+      {
+        "@type": "MenuSection",
+        "name": "Toppings",
+        "hasMenuItem": [
+          {"@type":"MenuItem","name":"Pollo en cubos","offers":{"@type":"Offer","price":"50","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Panceta en cubos","offers":{"@type":"Offer","price":"30","priceCurrency":"UYU"}}
+        ]
+      },
+      {
+        "@type": "MenuSection",
+        "name": "Especiales de la casa",
+        "hasMenuItem": [
+          {"@type":"MenuItem","name":"Fetuccini + Milanesa de pollo + salsa a elección","offers":{"@type":"Offer","price":"440","priceCurrency":"UYU"}}
         ]
       },
       {
         "@type": "MenuSection",
         "name": "Postres",
-        "hasMenuItem": [{
-          "@type": "MenuItem",
-          "name": "Tiramisú",
-          "description": "Receta tradicional, café espresso, mascarpone"
-        }]
+        "hasMenuItem": [
+          {"@type":"MenuItem","name":"Tiramisú de mascarpone","offers":{"@type":"Offer","price":"150","priceCurrency":"UYU"}}
+        ]
+      },
+      {
+        "@type": "MenuSection",
+        "name": "Bebidas",
+        "hasMenuItem": [
+          {"@type":"MenuItem","name":"Refresco línea Coca-Cola (310 ml)","offers":{"@type":"Offer","price":"70","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Agua (625 ml)","offers":{"@type":"Offer","price":"70","priceCurrency":"UYU"}}
+        ]
       }
     ]
   },
@@ -463,14 +483,32 @@
     padding: 10px 0;
     border-bottom: 1px dashed rgba(137,30,30,0.18);
     color: var(--tinta);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
   }
   .menu-card li:last-child{ border-bottom: none; }
+  .menu-card li .li-text{ flex: 1; }
+  .menu-card li .price{
+    font-family: 'Ribes', sans-serif;
+    font-size: 21px;
+    color: var(--rojo);
+    white-space: nowrap;
+  }
   .menu-card li .item-desc{
     display: block;
     font-style: italic;
     font-size: 15px;
     opacity: 0.65;
     margin-top: 2px;
+  }
+  /* número de paso en el título de cada tarjeta */
+  .menu-card h3 .paso{
+    font-family: 'Ribes', sans-serif;
+    font-style: italic;
+    color: var(--rojo-suave);
+    margin-right: 10px;
   }
 
   .menu-card.destacada{
@@ -513,6 +551,58 @@
     font-style: italic;
     font-size: 18px;
     color: var(--tinta);
+  }
+
+  /* ---------- ESPECIAL DE LA CASA ---------- */
+  .especial{
+    max-width: 760px;
+    margin: 50px auto 0;
+    padding: 28px 34px;
+    background: linear-gradient(135deg, var(--crema-claro) 0%, #fff 100%);
+    border: 2px solid var(--rojo);
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(137,30,30,0.08);
+  }
+  .especial .especial-label{
+    font-family: 'Manrope', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--rojo);
+    opacity: 0.85;
+    margin-bottom: 12px;
+  }
+  .especial .especial-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+  }
+  .especial .especial-row .nombre{
+    font-family: 'Ribes', sans-serif;
+    font-size: 27px;
+    color: var(--tinta);
+    line-height: 1.3;
+  }
+  .especial .especial-row .opcional{
+    font-family: 'Manrope', sans-serif;
+    font-style: italic;
+    font-size: 14px;
+    opacity: 0.6;
+  }
+  .especial .especial-row .price{
+    font-family: 'Ribes', sans-serif;
+    font-size: 26px;
+    color: var(--rojo);
+    white-space: nowrap;
+  }
+
+  /* grilla acotada para Postres + Bebidas */
+  .menu-grid.dos{
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   /* ---------- VISITA ---------- */
@@ -744,71 +834,72 @@
 <div class="carta-bg">
 <section id="carta" class="reveal">
   <h2 class="section-title">la carta</h2>
-  <p class="section-subtitle">— combiná tu fetuccini con la salsa que prefieras —</p>
+  <p class="section-subtitle">— armá tu plato: elegí tu pasta y sumale la salsa y los toppings que quieras —</p>
 
   <div class="menu-grid">
 
-    <!-- FETUCCINI -->
+    <!-- PASO 1 · PASTA -->
     <div class="menu-card destacada">
-      <h3>Fetuccini</h3>
-      <p class="categoria">Nuestra pasta fresca</p>
+      <h3><span class="paso">1</span> Elegí tu pasta</h3>
+      <p class="categoria">Pasta fresca artesanal</p>
       <ul>
-        <li>
-          Fetuccini casero
-          <span class="item-desc">Amasado todos los días, cortado a la antigua</span>
-        </li>
+        <li><span class="li-text">Fetuccini Alfredo</span><span class="price">$250</span></li>
+        <li><span class="li-text">Capellaccis de calabaza</span><span class="price">$310</span></li>
+        <li><span class="li-text">Capelletis de hongos</span><span class="price">$360</span></li>
       </ul>
-      <p style="margin-top:18px; font-family:'Manrope', sans-serif; font-style:italic; font-size:17px; opacity:0.7;">
-        Elegí tu salsa y add ons para armar tu plato →
-      </p>
     </div>
 
-    <!-- SALSAS -->
+    <!-- PASO 2 · SALSA -->
     <div class="menu-card">
-      <h3>Salsas</h3>
+      <h3><span class="paso">2</span> Sumá tu salsa</h3>
       <p class="categoria">Hechas en casa</p>
       <ul>
-        <li>Alfredo <span class="item-desc">Nuestra salsa base, manteca y queso</span></li>
-        <li>Carusso <span class="item-desc">Crema, jamón, nueces y champiñones</span></li>
-        <li>Fileto <span class="item-desc">Tomate fresco, ajo, albahaca</span></li>
-        <li>Pollo a la crema <span class="item-desc">Suave y reconfortante</span></li>
-        <li>Ragú <span class="item-desc">Cocción lenta, sabor profundo</span></li>
-        <li>Pesto <span class="item-desc">Albahaca, piñones, parmesano</span></li>
+        <li><span class="li-text">Pomodoro</span><span class="price">$120</span></li>
+        <li><span class="li-text">Ragú de carne</span><span class="price">$160</span></li>
+        <li><span class="li-text">Salsa de hongos</span><span class="price">$140</span></li>
+        <li><span class="li-text">Pesto de albahaca</span><span class="price">$160</span></li>
+        <li><span class="li-text">Salsa rosa</span><span class="price">$130</span></li>
       </ul>
     </div>
 
-    <!-- ADD ONS -->
+    <!-- PASO 3 · TOPPINGS -->
     <div class="menu-card">
-      <h3>Add ons</h3>
+      <h3><span class="paso">3</span> Sumá tus toppings</h3>
       <p class="categoria">Para sumar</p>
       <ul>
-        <li>Parmesano rallado</li>
-        <li>Panceta</li>
-        <li>Pollo</li>
+        <li><span class="li-text">Pollo en cubos</span><span class="price">$50</span></li>
+        <li><span class="li-text">Panceta en cubos</span><span class="price">$30</span></li>
       </ul>
     </div>
 
-    <!-- POSTRE -->
+  </div>
+
+  <!-- ESPECIAL DE LA CASA -->
+  <div class="especial">
+    <p class="especial-label">Especiales de la casa</p>
+    <div class="especial-row">
+      <span class="nombre">Fetuccini + Milanesa de pollo + salsa a elección <span class="opcional">(opcional)</span></span>
+      <span class="price">$440</span>
+    </div>
+  </div>
+
+  <!-- POSTRES + BEBIDAS -->
+  <div class="menu-grid dos">
     <div class="menu-card">
-      <h3>Postre</h3>
+      <h3>Postres</h3>
       <p class="categoria">Para cerrar bien</p>
       <ul>
-        <li>Tiramisú <span class="item-desc">Receta tradicional, café espresso, mascarpone</span></li>
+        <li><span class="li-text">Tiramisú de mascarpone</span><span class="price">$150</span></li>
       </ul>
     </div>
-
-    <!-- BEBIDAS -->
     <div class="menu-card">
       <h3>Bebidas</h3>
       <p class="categoria">Para acompañar</p>
       <ul>
-        <li>Agua</li>
-        <li>Refresco</li>
-        <li>Cerveza</li>
-        <li>Vino</li>
+        <li><span class="li-text">Refresco línea Coca-Cola <span class="item-desc">310 ml</span></span><span class="price">$70</span></li>
+        <li><span class="li-text">Agua <span class="item-desc">625 ml</span></span><span class="price">$70</span></li>
       </ul>
     </div>
-
   </div>
 
   <div class="combina">
