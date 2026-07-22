@@ -76,15 +76,9 @@
   "openingHoursSpecification": [
     {
       "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      "opens": "11:00",
-      "closes": "19:00"
-    },
-    {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": "Saturday",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
       "opens": "11:30",
-      "closes": "14:30"
+      "closes": "15:30"
     }
   ],
   "sameAs": [
@@ -98,20 +92,19 @@
         "@type": "MenuSection",
         "name": "Elegí tu pasta",
         "hasMenuItem": [
-          {"@type":"MenuItem","name":"Fetuccini Alfredo","offers":{"@type":"Offer","price":"250","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Capellaccis de calabaza","offers":{"@type":"Offer","price":"310","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Capelletis de hongos","offers":{"@type":"Offer","price":"360","priceCurrency":"UYU"}}
+          {"@type":"MenuItem","name":"Fetuccini con Salsa Alfredo","description":"Rueda de queso","offers":{"@type":"Offer","price":"290","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Pasta rellena con Salsa Alfredo","description":"Capellaccis de calabaza y parmesano · Caramelle de boniato y nueces · Capelletis de hongos","offers":{"@type":"Offer","price":"350","priceCurrency":"UYU"}}
         ]
       },
       {
         "@type": "MenuSection",
         "name": "Sumá tu salsa",
         "hasMenuItem": [
-          {"@type":"MenuItem","name":"Pomodoro","offers":{"@type":"Offer","price":"120","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Ragú de carne","offers":{"@type":"Offer","price":"160","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Pomodoro","offers":{"@type":"Offer","price":"100","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Salsa rosa","offers":{"@type":"Offer","price":"100","priceCurrency":"UYU"}},
           {"@type":"MenuItem","name":"Salsa de hongos","offers":{"@type":"Offer","price":"140","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Pesto de albahaca","offers":{"@type":"Offer","price":"160","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Salsa rosa","offers":{"@type":"Offer","price":"130","priceCurrency":"UYU"}}
+          {"@type":"MenuItem","name":"Pesto de albahaca","offers":{"@type":"Offer","price":"140","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Ragú de carne","offers":{"@type":"Offer","price":"140","priceCurrency":"UYU"}}
         ]
       },
       {
@@ -119,14 +112,14 @@
         "name": "Toppings",
         "hasMenuItem": [
           {"@type":"MenuItem","name":"Pollo en cubos","offers":{"@type":"Offer","price":"50","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Panceta en cubos","offers":{"@type":"Offer","price":"30","priceCurrency":"UYU"}}
+          {"@type":"MenuItem","name":"Panceta en crispy","offers":{"@type":"Offer","price":"30","priceCurrency":"UYU"}}
         ]
       },
       {
         "@type": "MenuSection",
         "name": "Especiales de la casa",
         "hasMenuItem": [
-          {"@type":"MenuItem","name":"Fetuccini + Milanesa de pollo + salsa a elección","offers":{"@type":"Offer","price":"440","priceCurrency":"UYU"}}
+          {"@type":"MenuItem","name":"Milanesa + Fetuccini Alfredo","offers":{"@type":"Offer","price":"440","priceCurrency":"UYU"}}
         ]
       },
       {
@@ -851,22 +844,21 @@
       <h3><span class="paso">1</span> Elegí tu pasta</h3>
       <p class="categoria">Pasta fresca artesanal</p>
       <ul>
-        <li><span class="li-text">Fetuccini Alfredo</span><span class="price">$250</span></li>
-        <li><span class="li-text">Capellaccis de calabaza</span><span class="price">$310</span></li>
-        <li><span class="li-text">Capelletis de hongos</span><span class="price">$360</span></li>
+        <li><span class="li-text">Fetuccini con Salsa Alfredo <span class="item-desc">Rueda de queso</span></span><span class="price">$290</span></li>
+        <li><span class="li-text">Pasta rellena con Salsa Alfredo <span class="item-desc">Capellaccis de calabaza y parmesano · Caramelle de boniato y nueces · Capelletis de hongos</span></span><span class="price">$350</span></li>
       </ul>
     </div>
 
     <!-- PASO 2 · SALSA -->
     <div class="menu-card">
       <h3><span class="paso">2</span> Sumá tu salsa</h3>
-      <p class="categoria">Hechas en casa</p>
+      <p class="categoria">Combiná como quieras</p>
       <ul>
-        <li><span class="li-text">Pomodoro</span><span class="price">$120</span></li>
-        <li><span class="li-text">Ragú de carne</span><span class="price">$160</span></li>
+        <li><span class="li-text">Pomodoro</span><span class="price">$100</span></li>
+        <li><span class="li-text">Salsa rosa</span><span class="price">$100</span></li>
         <li><span class="li-text">Salsa de hongos</span><span class="price">$140</span></li>
-        <li><span class="li-text">Pesto de albahaca</span><span class="price">$160</span></li>
-        <li><span class="li-text">Salsa rosa</span><span class="price">$130</span></li>
+        <li><span class="li-text">Pesto de albahaca</span><span class="price">$140</span></li>
+        <li><span class="li-text">Ragú de carne</span><span class="price">$140</span></li>
       </ul>
     </div>
 
@@ -876,7 +868,7 @@
       <p class="categoria">Para sumar</p>
       <ul>
         <li><span class="li-text">Pollo en cubos</span><span class="price">$50</span></li>
-        <li><span class="li-text">Panceta en cubos</span><span class="price">$30</span></li>
+        <li><span class="li-text">Panceta en crispy</span><span class="price">$30</span></li>
       </ul>
     </div>
 
@@ -886,7 +878,7 @@
   <div class="especial">
     <p class="especial-label">Especiales de la casa</p>
     <div class="especial-row">
-      <span class="nombre">Fetuccini + Milanesa de pollo + salsa a elección <span class="opcional">(opcional)</span></span>
+      <span class="nombre">Milanesa + Fetuccini Alfredo</span>
       <span class="price">$440</span>
     </div>
   </div>
@@ -937,8 +929,7 @@
 
       <div class="info-item">
         <h4>🕐 horario</h4>
-        <p>Lunes a viernes<br/>de 11:00 a 19:00<br/>
-        Sábados<br/>de 11:30 a 14:30</p>
+        <p>Lunes a sábados<br/>de 11:30 a 15:30</p>
       </div>
 
       <div class="info-item">
