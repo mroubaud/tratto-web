@@ -13,5 +13,8 @@ Desktop.ini
 *.zip
 files-backup.zip
 
+# Documentos internos: Netlify publica la raíz del repo, así que no van acá
+*.pdf
+
 # Logs
 *.log
