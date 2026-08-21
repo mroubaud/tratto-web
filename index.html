@@ -6,7 +6,7 @@
 
 <!-- ===== SEO BÁSICO ===== -->
 <title>Tratto Pastas · Pasta fresca artesanal en Montevideo Centro</title>
-<meta name="description" content="Pasta fresca artesanal en el Centro de Montevideo. Armá tu plato en la web —fetuccini, capellaccis, caramelle y capelletis con salsas caseras—, mandalo por WhatsApp y pasá a buscarlo. Lunes a sábados de 11:30 a 15:30." />
+<meta name="description" content="Pasta fresca artesanal en el Centro de Montevideo. Armá tu plato en la web —fetuccini, capellaccis, caramelle y capelletis con salsas caseras—, mandalo por WhatsApp y pasá a buscarlo. Lunes a sábados de 11:30 a 15:00." />
 <meta name="keywords" content="pasta fresca Montevideo, fetuccini artesanal, pastas caseras Centro Montevideo, pastería Uruguay, pasta para llevar Montevideo, Tratto pastas" />
 <meta name="author" content="Tratto Pastas" />
 <meta name="robots" content="index, follow" />
@@ -83,7 +83,7 @@
       "@type": "OpeningHoursSpecification",
       "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
       "opens": "11:30",
-      "closes": "15:30"
+      "closes": "15:00"
     }
   ],
   "sameAs": [
@@ -1417,7 +1417,7 @@
 <nav>
   <div class="nav-izq">
     <a href="#inicio"><img src="tratto-logo.svg" alt="Tratto Pastas - Pasta fresca artesanal Montevideo" class="logo-mini" /></a>
-    <!-- Indicador abierto / cerrado · se calcula con el horario del local (lun-sáb 11:30-15:30) -->
+    <!-- Indicador abierto / cerrado · se calcula con el horario del local (lun-sáb 11:30-15:00) -->
     <span class="estado" id="estado" role="status" aria-live="polite">
       <span class="punto" aria-hidden="true"></span>
       <span class="estado-texto">—</span>
@@ -1613,7 +1613,7 @@
 
       <div class="info-item">
         <h4>🕐 horario</h4>
-        <p>Lunes a sábados<br/>de 11:30 a 15:30</p>
+        <p>Lunes a sábados<br/>de 11:30 a 15:00</p>
       </div>
 
       <div class="info-item">
@@ -1767,7 +1767,7 @@ const MENU = {
 
 /* ---------- horario del local ---------- */
 const APERTURA = 11 * 60 + 30;   // 11:30
-const CIERRE   = 15 * 60 + 30;   // 15:30
+const CIERRE   = 15 * 60 + 0;   // 15:00
 
 function horaEnMontevideo(){
   const partes = new Intl.DateTimeFormat('en-GB', {
@@ -1787,7 +1787,7 @@ function estadoLocal(){
   const habil = dia >= 1 && dia <= 6;
 
   if (habil && minutos >= APERTURA && minutos < CIERRE){
-    return { abierto: true, texto: 'abierto ahora', detalle: '· hasta las 15:30' };
+    return { abierto: true, texto: 'abierto ahora', detalle: '· hasta las 15:00' };
   }
   if (habil && minutos < APERTURA){
     return { abierto: false, texto: 'cerrado', detalle: '· abrimos hoy 11:30', proximo: 'hoy a las 11:30' };
