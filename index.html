@@ -6,7 +6,7 @@
 
 <!-- ===== SEO BÁSICO ===== -->
 <title>Tratto Pastas · Pasta fresca artesanal en Montevideo Centro</title>
-<meta name="description" content="Pasta fresca artesanal en el Centro de Montevideo. Armá tu plato en la web —fetuccini, capellaccis, caramelle y capelletis con salsas caseras—, mandalo por WhatsApp y pasá a buscarlo. Lunes a sábados de 11:30 a 15:00." />
+<meta name="description" content="Pasta fresca artesanal en el Centro de Montevideo. Armá tu plato en la web —fetuccini y capellaccis de calabaza y parmesano con salsas caseras—, mandalo por WhatsApp y pasá a buscarlo. Martes a domingos de 11:30 a 15:00." />
 <meta name="keywords" content="pasta fresca Montevideo, fetuccini artesanal, pastas caseras Centro Montevideo, pastería Uruguay, pasta para llevar Montevideo, Tratto pastas" />
 <meta name="author" content="Tratto Pastas" />
 <meta name="robots" content="index, follow" />
@@ -81,7 +81,7 @@
   "openingHoursSpecification": [
     {
       "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
       "opens": "11:30",
       "closes": "15:00"
     }
@@ -99,18 +99,19 @@
         "name": "Elegí tu pasta",
         "hasMenuItem": [
           {"@type":"MenuItem","name":"Fetuccini con Salsa Alfredo","description":"Terminado en rueda de queso","image":"https://pastastratto.com/fotos/fetuccini.jpg","offers":{"@type":"Offer","price":"290","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Pasta rellena con Salsa Alfredo","description":"Capellaccis de calabaza y parmesano · Caramelle de boniato y nueces · Capelletis de hongos","image":"https://pastastratto.com/fotos/pasta-rellena.jpg","offers":{"@type":"Offer","price":"350","priceCurrency":"UYU"}}
+          {"@type":"MenuItem","name":"Pasta rellena con Salsa Alfredo","description":"Capellaccis de calabaza y parmesano","image":"https://pastastratto.com/fotos/pasta-rellena.jpg","offers":{"@type":"Offer","price":"350","priceCurrency":"UYU"}}
         ]
       },
       {
         "@type": "MenuSection",
         "name": "Sumá tu salsa",
         "hasMenuItem": [
-          {"@type":"MenuItem","name":"Pomodoro","offers":{"@type":"Offer","price":"100","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Salsa rosa","offers":{"@type":"Offer","price":"100","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Salsa de hongos","offers":{"@type":"Offer","price":"100","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Crema de hongos","offers":{"@type":"Offer","price":"120","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Ragú de carne","offers":{"@type":"Offer","price":"120","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Cuatro quesos","offers":{"@type":"Offer","price":"120","priceCurrency":"UYU"}},
           {"@type":"MenuItem","name":"Pesto de albahaca","offers":{"@type":"Offer","price":"100","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Ragú de carne","offers":{"@type":"Offer","price":"100","priceCurrency":"UYU"}}
+          {"@type":"MenuItem","name":"Pomodoro","offers":{"@type":"Offer","price":"100","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Salsa rosa","offers":{"@type":"Offer","price":"100","priceCurrency":"UYU"}}
         ]
       },
       {
@@ -139,8 +140,8 @@
         "@type": "MenuSection",
         "name": "Bebidas",
         "hasMenuItem": [
-          {"@type":"MenuItem","name":"Refresco línea Coca-Cola (310 ml)","offers":{"@type":"Offer","price":"70","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Agua (625 ml)","offers":{"@type":"Offer","price":"70","priceCurrency":"UYU"}}
+          {"@type":"MenuItem","name":"Refresco línea Coca-Cola (310 ml)","offers":{"@type":"Offer","price":"80","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Agua (625 ml)","offers":{"@type":"Offer","price":"80","priceCurrency":"UYU"}}
         ]
       }
     ]
@@ -1417,7 +1418,7 @@
 <nav>
   <div class="nav-izq">
     <a href="#inicio"><img src="tratto-logo.svg" alt="Tratto Pastas - Pasta fresca artesanal Montevideo" class="logo-mini" /></a>
-    <!-- Indicador abierto / cerrado · se calcula con el horario del local (lun-sáb 11:30-15:00) -->
+    <!-- Indicador abierto / cerrado · se calcula con el horario del local (mar-dom 11:30-15:00) -->
     <span class="estado" id="estado" role="status" aria-live="polite">
       <span class="punto" aria-hidden="true"></span>
       <span class="estado-texto">—</span>
@@ -1613,7 +1614,7 @@
 
       <div class="info-item">
         <h4>🕐 horario</h4>
-        <p>Lunes a sábados<br/>de 11:30 a 15:00</p>
+        <p>Martes a domingos<br/>de 11:30 a 15:00</p>
       </div>
 
       <div class="info-item">
@@ -1727,15 +1728,10 @@ const MENU = {
     {
       id: 'rellena',
       nombre: 'Pasta rellena',
-      desc: 'Con salsa Alfredo · elegís el relleno',
+      desc: 'Capellaccis de calabaza y parmesano · con salsa Alfredo',
       precio: 350,
       foto: 'fotos/pasta-rellena.jpg',
-      alt: 'Pasta rellena artesanal de Tratto con salsa y queso rallado',
-      rellenos: [
-        { id: 'capellaccis', nombre: 'Capellaccis de calabaza y parmesano' },
-        { id: 'caramelle',   nombre: 'Caramelle de boniato y nueces' },
-        { id: 'capelletis',  nombre: 'Capelletis de hongos' }
-      ]
+      alt: 'Capellaccis de calabaza y parmesano de Tratto con salsa y queso rallado'
     },
     {
       id: 'milanesa',
@@ -1748,11 +1744,12 @@ const MENU = {
     }
   ],
   salsas: [
-    { id: 'pomodoro', nombre: 'Pomodoro',          precio: 100 },
-    { id: 'rosa',     nombre: 'Salsa rosa',        precio: 100 },
-    { id: 'hongos',   nombre: 'Salsa de hongos',   precio: 100 },
+    { id: 'hongos',   nombre: 'Crema de hongos',   precio: 120 },
+    { id: 'ragu',     nombre: 'Ragú de carne',     precio: 120 },
+    { id: 'quesos',   nombre: 'Cuatro quesos',     precio: 120 },
     { id: 'pesto',    nombre: 'Pesto de albahaca', precio: 100 },
-    { id: 'ragu',     nombre: 'Ragú de carne',     precio: 100 }
+    { id: 'pomodoro', nombre: 'Pomodoro',          precio: 100 },
+    { id: 'rosa',     nombre: 'Salsa rosa',        precio: 100 }
   ],
   toppings: [
     { id: 'pollo',   nombre: 'Pollo en cubos',    precio: 50 },
@@ -1760,8 +1757,8 @@ const MENU = {
   ],
   extras: [
     { id: 'tiramisu', nombre: 'Tiramisú de mascarpone', detalle: 'postre',   precio: 190 },
-    { id: 'refresco', nombre: 'Refresco Coca-Cola',     detalle: '310 ml',   precio: 70  },
-    { id: 'agua',     nombre: 'Agua',                   detalle: '625 ml',   precio: 70  }
+    { id: 'refresco', nombre: 'Refresco Coca-Cola',     detalle: '310 ml',   precio: 80  },
+    { id: 'agua',     nombre: 'Agua',                   detalle: '625 ml',   precio: 80  }
   ]
 };
 
@@ -1784,7 +1781,7 @@ function horaEnMontevideo(){
 
 function estadoLocal(){
   const { dia, minutos } = horaEnMontevideo();
-  const habil = dia >= 1 && dia <= 6;
+  const habil = dia >= 2 && dia <= 7;   // martes a domingo · lunes cerrado
 
   if (habil && minutos >= APERTURA && minutos < CIERRE){
     return { abierto: true, texto: 'abierto ahora', detalle: '· hasta las 15:00' };
@@ -1792,13 +1789,13 @@ function estadoLocal(){
   if (habil && minutos < APERTURA){
     return { abierto: false, texto: 'cerrado', detalle: '· abrimos hoy 11:30', proximo: 'hoy a las 11:30' };
   }
-  // fuera de hora: si hoy es sábado (o domingo), el próximo turno es el lunes
-  const proximo = (dia === 6 || dia === 7) ? 'el lunes a las 11:30' : 'mañana a las 11:30';
+  // fuera de hora: el domingo salteamos el lunes (cerrado) y el próximo turno es el martes
+  const saltaLunes = dia === 7;
   return {
     abierto: false,
     texto: 'cerrado',
-    detalle: '· abrimos ' + (proximo === 'el lunes a las 11:30' ? 'el lunes 11:30' : 'mañana 11:30'),
-    proximo: proximo
+    detalle: '· abrimos ' + (saltaLunes ? 'el martes 11:30' : 'mañana 11:30'),
+    proximo: saltaLunes ? 'el martes a las 11:30' : 'mañana a las 11:30'
   };
 }
 
@@ -1821,9 +1818,12 @@ function pintarEstado(){
 }
 
 /* ---------- estado de la selección y del pedido ---------- */
+// hoy ninguna pasta trae sub-elección de relleno; queda contemplado por si vuelve
+const pastaConRelleno = MENU.pastas.find(p => p.rellenos);
+
 const sel = {
   pastaId: MENU.pastas[0].id,
-  rellenoId: MENU.pastas.find(p => p.rellenos).rellenos[0].id,
+  rellenoId: pastaConRelleno ? pastaConRelleno.rellenos[0].id : null,
   salsas: [],
   toppings: []
 };
