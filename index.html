@@ -6,7 +6,7 @@
 
 <!-- ===== SEO BÁSICO ===== -->
 <title>Tratto Pastas · Pasta fresca artesanal en Montevideo Centro</title>
-<meta name="description" content="Pasta fresca artesanal en el Centro de Montevideo. Armá tu plato en la web —fetuccini y capellaccis de calabaza y parmesano con salsas caseras—, mandalo por WhatsApp y pasá a buscarlo. Martes a domingos de 11:30 a 15:00." />
+<meta name="description" content="Pasta fresca artesanal en el Centro de Montevideo. Armá tu plato en la web —fetuccini y capellaccis de calabaza y parmesano con salsas caseras—, mandalo por WhatsApp y pasá a buscarlo. Lunes a sábados de 11:30 a 15:00." />
 <meta name="keywords" content="pasta fresca Montevideo, fetuccini artesanal, pastas caseras Centro Montevideo, pastería Uruguay, pasta para llevar Montevideo, Tratto pastas" />
 <meta name="author" content="Tratto Pastas" />
 <meta name="robots" content="index, follow" />
@@ -81,7 +81,7 @@
   "openingHoursSpecification": [
     {
       "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
       "opens": "11:30",
       "closes": "15:00"
     }
@@ -1418,7 +1418,7 @@
 <nav>
   <div class="nav-izq">
     <a href="#inicio"><img src="tratto-logo.svg" alt="Tratto Pastas - Pasta fresca artesanal Montevideo" class="logo-mini" /></a>
-    <!-- Indicador abierto / cerrado · se calcula con el horario del local (mar-dom 11:30-15:00) -->
+    <!-- Indicador abierto / cerrado · se calcula con el horario del local (lun-sáb 11:30-15:00) -->
     <span class="estado" id="estado" role="status" aria-live="polite">
       <span class="punto" aria-hidden="true"></span>
       <span class="estado-texto">—</span>
@@ -1614,7 +1614,7 @@
 
       <div class="info-item">
         <h4>🕐 horario</h4>
-        <p>Martes a domingos<br/>de 11:30 a 15:00</p>
+        <p>Lunes a sábados<br/>de 11:30 a 15:00</p>
       </div>
 
       <div class="info-item">
@@ -1781,7 +1781,7 @@ function horaEnMontevideo(){
 
 function estadoLocal(){
   const { dia, minutos } = horaEnMontevideo();
-  const habil = dia >= 2 && dia <= 7;   // martes a domingo · lunes cerrado
+  const habil = dia >= 1 && dia <= 6;   // lunes a sábado · domingo cerrado
 
   if (habil && minutos >= APERTURA && minutos < CIERRE){
     return { abierto: true, texto: 'abierto ahora', detalle: '· hasta las 15:00' };
@@ -1789,13 +1789,13 @@ function estadoLocal(){
   if (habil && minutos < APERTURA){
     return { abierto: false, texto: 'cerrado', detalle: '· abrimos hoy 11:30', proximo: 'hoy a las 11:30' };
   }
-  // fuera de hora: el domingo salteamos el lunes (cerrado) y el próximo turno es el martes
-  const saltaLunes = dia === 7;
+  // fuera de hora: desde el sábado (y el domingo, cerrado) el próximo turno es el lunes
+  const alLunes = dia === 6 || dia === 7;
   return {
     abierto: false,
     texto: 'cerrado',
-    detalle: '· abrimos ' + (saltaLunes ? 'el martes 11:30' : 'mañana 11:30'),
-    proximo: saltaLunes ? 'el martes a las 11:30' : 'mañana a las 11:30'
+    detalle: '· abrimos ' + (alLunes ? 'el lunes 11:30' : 'mañana 11:30'),
+    proximo: alLunes ? 'el lunes a las 11:30' : 'mañana a las 11:30'
   };
 }
 
