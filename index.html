@@ -6,7 +6,7 @@
 
 <!-- ===== SEO BÁSICO ===== -->
 <title>Tratto Pastas · Pasta fresca artesanal en Montevideo Centro</title>
-<meta name="description" content="Pasta fresca artesanal en el Centro de Montevideo. Armá tu plato en la web —fetuccini y capellaccis de calabaza y parmesano con salsas caseras—, mandalo por WhatsApp y pasá a buscarlo. Lunes a sábados de 11:30 a 15:00." />
+<meta name="description" content="Pasta fresca artesanal en el Centro de Montevideo. Armá tu plato en la web —fetuccini, cappellettis de calabaza y milanesa con salsas caseras—, mandalo por WhatsApp y pasá a buscarlo. Lunes a sábados de 11:30 a 15:00." />
 <meta name="keywords" content="pasta fresca Montevideo, fetuccini artesanal, pastas caseras Centro Montevideo, pastería Uruguay, pasta para llevar Montevideo, Tratto pastas" />
 <meta name="author" content="Tratto Pastas" />
 <meta name="robots" content="index, follow" />
@@ -99,7 +99,7 @@
         "name": "Elegí tu pasta",
         "hasMenuItem": [
           {"@type":"MenuItem","name":"Fetuccini con Salsa Alfredo","description":"Terminado en rueda de queso","image":"https://pastastratto.com/fotos/fetuccini.jpg","offers":{"@type":"Offer","price":"290","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Pasta rellena con Salsa Alfredo","description":"Capellaccis de calabaza y parmesano","image":"https://pastastratto.com/fotos/pasta-rellena.jpg","offers":{"@type":"Offer","price":"350","priceCurrency":"UYU"}}
+          {"@type":"MenuItem","name":"Pasta rellena con Salsa Alfredo","description":"Cappellettis de calabaza","image":"https://pastastratto.com/fotos/pasta-rellena.jpg","offers":{"@type":"Offer","price":"350","priceCurrency":"UYU"}}
         ]
       },
       {
@@ -111,7 +111,8 @@
           {"@type":"MenuItem","name":"Cuatro quesos","offers":{"@type":"Offer","price":"120","priceCurrency":"UYU"}},
           {"@type":"MenuItem","name":"Pesto de albahaca","offers":{"@type":"Offer","price":"100","priceCurrency":"UYU"}},
           {"@type":"MenuItem","name":"Pomodoro","offers":{"@type":"Offer","price":"100","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Salsa rosa","offers":{"@type":"Offer","price":"100","priceCurrency":"UYU"}}
+          {"@type":"MenuItem","name":"Salsa rosa","offers":{"@type":"Offer","price":"100","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Boloñesa","offers":{"@type":"Offer","price":"100","priceCurrency":"UYU"}}
         ]
       },
       {
@@ -126,7 +127,9 @@
         "@type": "MenuSection",
         "name": "Especiales de la casa",
         "hasMenuItem": [
-          {"@type":"MenuItem","name":"Milanesa de pollo + Fetuccini Alfredo","image":"https://pastastratto.com/fotos/milanesa.jpg","offers":{"@type":"Offer","price":"440","priceCurrency":"UYU"}}
+          {"@type":"MenuItem","name":"Milanesa de pollo + Fetuccini Alfredo","image":"https://pastastratto.com/fotos/milanesa.jpg","offers":{"@type":"Offer","price":"440","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Milanesa de carne + Fetuccini Alfredo","image":"https://pastastratto.com/fotos/milanesa.jpg","offers":{"@type":"Offer","price":"440","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Ñoquis caseros con Salsa Alfredo","description":"Solo los 29 de cada mes","offers":{"@type":"Offer","price":"440","priceCurrency":"UYU"}}
         ]
       },
       {
@@ -704,15 +707,15 @@
     outline-offset: 2px;
   }
 
-  /* sub-elección de relleno */
-  .rellenos{
+  /* sub-elección del plato (variante) */
+  .variantes{
     margin-top: 16px;
     padding: 14px 16px;
     background: rgba(137,30,30,0.045);
     border: 1px dashed rgba(137,30,30,0.3);
     border-radius: 6px;
   }
-  .rellenos-label{
+  .variantes-label{
     font-size: 14px;
     font-weight: 700;
     text-transform: uppercase;
@@ -720,9 +723,9 @@
     color: var(--rojo);
     margin-bottom: 10px;
   }
-  .rellenos[hidden]{ display: none; }
+  .variantes[hidden]{ display: none; }
 
-  /* chips (salsas, toppings, rellenos) */
+  /* chips (salsas, toppings, variantes) */
   .chips{
     display: flex;
     flex-wrap: wrap;
@@ -1509,12 +1512,13 @@
           <h3>Elegí tu pasta</h3>
         </div>
         <p class="paso-nota">Toda la pasta es fresca, hecha a mano, y va con salsa Alfredo.</p>
+        <p class="paso-nota" id="nota-noquis" hidden></p>
         <div class="opciones-pasta" id="opciones-pasta" role="radiogroup" aria-label="Elegí tu pasta"></div>
 
-        <!-- sub-elección del relleno -->
-        <div class="rellenos" id="rellenos" hidden>
-          <p class="rellenos-label">¿Qué relleno querés?</p>
-          <div class="chips" id="chips-rellenos" role="radiogroup" aria-label="Elegí el relleno"></div>
+        <!-- sub-elección de la variante del plato -->
+        <div class="variantes" id="variantes" hidden>
+          <p class="variantes-label" id="variantes-label"></p>
+          <div class="chips" id="chips-variantes" role="radiogroup" aria-label="Elegí la variante"></div>
         </div>
       </div>
 
@@ -1728,19 +1732,34 @@ const MENU = {
     {
       id: 'rellena',
       nombre: 'Pasta rellena',
-      desc: 'Capellaccis de calabaza y parmesano · con salsa Alfredo',
+      desc: 'Cappellettis de calabaza · con salsa Alfredo',
       precio: 350,
       foto: 'fotos/pasta-rellena.jpg',
-      alt: 'Capellaccis de calabaza y parmesano de Tratto con salsa y queso rallado'
+      alt: 'Cappellettis de calabaza de Tratto con salsa y queso rallado'
     },
     {
       id: 'milanesa',
-      nombre: 'Milanesa de pollo + Fetuccini',
-      desc: 'Con salsa Alfredo · el especial de la casa',
+      nombre: 'Milanesa + Fetuccini',
+      desc: 'De pollo o de carne · el especial de la casa',
       precio: 440,
       foto: 'fotos/milanesa.jpg',
-      alt: 'Milanesa de pollo con fetuccini Alfredo y queso rallado en bowl de Tratto',
-      badge: 'el especial'
+      alt: 'Milanesa con fetuccini Alfredo y queso rallado en bowl de Tratto',
+      badge: 'el especial',
+      variantesLabel: '¿La querés de pollo o de carne?',
+      variantes: [
+        { id: 'pollo', nombre: 'De pollo' },
+        { id: 'carne', nombre: 'De carne' }
+      ]
+    },
+    {
+      id: 'noquis',
+      nombre: 'Ñoquis',
+      desc: 'Caseros, la tradición del 29 · con salsa Alfredo',
+      precio: 440,
+      foto: 'fotos/pasta-fresca.jpg',
+      alt: 'Ñoquis caseros de Tratto con salsa y queso rallado',
+      badge: 'solo hoy, 29',
+      soloDia29: true
     }
   ],
   salsas: [
@@ -1749,7 +1768,8 @@ const MENU = {
     { id: 'quesos',   nombre: 'Cuatro quesos',     precio: 120 },
     { id: 'pesto',    nombre: 'Pesto de albahaca', precio: 100 },
     { id: 'pomodoro', nombre: 'Pomodoro',          precio: 100 },
-    { id: 'rosa',     nombre: 'Salsa rosa',        precio: 100 }
+    { id: 'rosa',     nombre: 'Salsa rosa',        precio: 100 },
+    { id: 'bolonesa', nombre: 'Boloñesa',          precio: 100 }
   ],
   toppings: [
     { id: 'pollo',   nombre: 'Pollo en cubos',    precio: 50 },
@@ -1769,12 +1789,13 @@ const CIERRE   = 15 * 60 + 0;   // 15:00
 function horaEnMontevideo(){
   const partes = new Intl.DateTimeFormat('en-GB', {
     timeZone: 'America/Montevideo',
-    weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false
+    weekday: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false
   }).formatToParts(new Date());
   const buscar = t => (partes.find(p => p.type === t) || {}).value;
   const dias = { Mon:1, Tue:2, Wed:3, Thu:4, Fri:5, Sat:6, Sun:7 };
   return {
     dia: dias[buscar('weekday')] || 1,
+    diaMes: parseInt(buscar('day'), 10),
     minutos: parseInt(buscar('hour'), 10) * 60 + parseInt(buscar('minute'), 10)
   };
 }
@@ -1818,12 +1839,13 @@ function pintarEstado(){
 }
 
 /* ---------- estado de la selección y del pedido ---------- */
-// hoy ninguna pasta trae sub-elección de relleno; queda contemplado por si vuelve
-const pastaConRelleno = MENU.pastas.find(p => p.rellenos);
+// los ñoquis son la tradición del 29: solo ese día entran a la carta
+const esDia29 = () => horaEnMontevideo().diaMes === 29;
+const pastasDisponibles = () => MENU.pastas.filter(p => !p.soloDia29 || esDia29());
 
 const sel = {
-  pastaId: MENU.pastas[0].id,
-  rellenoId: pastaConRelleno ? pastaConRelleno.rellenos[0].id : null,
+  pastaId: pastasDisponibles()[0].id,
+  varianteId: null,
   salsas: [],
   toppings: []
 };
@@ -1836,7 +1858,7 @@ const buscar = (lista, id) => lista.find(x => x.id === id);
 
 /* ---------- render de los pasos ---------- */
 function pintarPastas(){
-  document.getElementById('opciones-pasta').innerHTML = MENU.pastas.map(p => `
+  document.getElementById('opciones-pasta').innerHTML = pastasDisponibles().map(p => `
     <label class="op-pasta">
       <input type="radio" name="pasta" value="${p.id}" ${p.id === sel.pastaId ? 'checked' : ''} />
       <img src="${p.foto}" alt="${p.alt}" width="800" height="600" loading="lazy" />
@@ -1853,30 +1875,45 @@ function pintarPastas(){
   document.querySelectorAll('input[name="pasta"]').forEach(input => {
     input.addEventListener('change', () => {
       sel.pastaId = input.value;
-      pintarRellenos();
+      pintarVariantes();
       pintarPrecioPlato();
     });
   });
 }
 
-function pintarRellenos(){
+function pintarVariantes(){
   const pasta = buscar(MENU.pastas, sel.pastaId);
-  const cont = document.getElementById('rellenos');
-  if (!pasta.rellenos){
+  const cont = document.getElementById('variantes');
+  if (!pasta.variantes){
     cont.hidden = true;
+    sel.varianteId = null;
     return;
   }
+  // al cambiar de plato la variante elegida ya no aplica: se vuelve a la primera
+  if (!buscar(pasta.variantes, sel.varianteId)) sel.varianteId = pasta.variantes[0].id;
   cont.hidden = false;
-  document.getElementById('chips-rellenos').innerHTML = pasta.rellenos.map(r => `
+  document.getElementById('variantes-label').textContent = pasta.variantesLabel || '¿Cuál preferís?';
+  document.getElementById('chips-variantes').innerHTML = pasta.variantes.map(v => `
     <label class="chip">
-      <input type="radio" name="relleno" value="${r.id}" ${r.id === sel.rellenoId ? 'checked' : ''} />
-      <span class="chip-texto">${r.nombre}</span>
+      <input type="radio" name="variante" value="${v.id}" ${v.id === sel.varianteId ? 'checked' : ''} />
+      <span class="chip-texto">${v.nombre}</span>
     </label>
   `).join('');
 
-  document.querySelectorAll('input[name="relleno"]').forEach(input => {
-    input.addEventListener('change', () => { sel.rellenoId = input.value; });
+  document.querySelectorAll('input[name="variante"]').forEach(input => {
+    input.addEventListener('change', () => { sel.varianteId = input.value; });
   });
+}
+
+function pintarNotaNoquis(){
+  const nota = document.getElementById('nota-noquis');
+  const noquis = MENU.pastas.find(p => p.soloDia29);
+  if (!noquis || esDia29()){
+    nota.hidden = true;
+    return;
+  }
+  nota.hidden = false;
+  nota.textContent = '🗓️ Los 29 de cada mes sumamos ñoquis caseros a ' + pesos(noquis.precio) + '.';
 }
 
 function pintarChips(contId, lista, clave){
@@ -1942,8 +1979,8 @@ function detalleLinea(linea){
   if (linea.tipo === 'extra') return [];
   const partes = ['salsa Alfredo'];
   const pasta = buscar(MENU.pastas, linea.pastaId);
-  if (pasta.rellenos && linea.rellenoId){
-    partes.unshift(buscar(pasta.rellenos, linea.rellenoId).nombre);
+  if (pasta.variantes && linea.varianteId){
+    partes.unshift(buscar(pasta.variantes, linea.varianteId).nombre);
   }
   if (linea.salsas.length){
     partes.push('+ ' + linea.salsas.map(id => buscar(MENU.salsas, id).nombre.toLowerCase()).join(', '));
@@ -1971,7 +2008,7 @@ function agregarPlato(){
     uid: ++uid,
     tipo: 'plato',
     pastaId: sel.pastaId,
-    rellenoId: pasta.rellenos ? sel.rellenoId : null,
+    varianteId: pasta.variantes ? sel.varianteId : null,
     salsas: [...sel.salsas],
     toppings: [...sel.toppings],
     cant: 1
@@ -2116,7 +2153,8 @@ pintarEstado();
 setInterval(pintarEstado, 60000);
 
 pintarPastas();
-pintarRellenos();
+pintarVariantes();
+pintarNotaNoquis();
 pintarChips('chips-salsas', MENU.salsas, 'salsas');
 pintarChips('chips-toppings', MENU.toppings, 'toppings');
 pintarExtras();
