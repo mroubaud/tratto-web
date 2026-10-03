@@ -84,6 +84,14 @@
       "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
       "opens": "11:30",
       "closes": "15:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Sunday"],
+      "opens": "11:30",
+      "closes": "15:00",
+      "validFrom": "2026-10-04",
+      "validThrough": "2026-10-04"
     }
   ],
   "sameAs": [
@@ -1247,6 +1255,16 @@
     transition: color .25s;
   }
   .info-item a:hover{ color: var(--rojo-oscuro); }
+  /* aviso de una apertura puntual (un domingo suelto, un feriado) */
+  .horario-extra{
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-left: 3px solid var(--coral);
+    background: rgba(234,117,117,0.10);
+    border-radius: 0 8px 8px 0;
+    font-size: 16.5px !important;
+  }
+  .horario-extra[hidden]{ display: none; }
 
   .mapa-bloque{
     border-radius: 6px;
@@ -1420,7 +1438,7 @@
 <nav>
   <div class="nav-izq">
     <a href="#inicio"><img src="tratto-logo.svg" alt="Tratto Pastas - Pasta fresca artesanal Montevideo" class="logo-mini" /></a>
-    <!-- Indicador abierto / cerrado · se calcula con el horario del local (lun-sáb 11:30-15:00) -->
+    <!-- Indicador abierto / cerrado · se calcula con el horario del local (lun-sáb 11:30-15:00 + APERTURAS_EXTRA) -->
     <span class="estado" id="estado" role="status" aria-live="polite">
       <span class="punto" aria-hidden="true"></span>
       <span class="estado-texto">—</span>
@@ -1618,6 +1636,7 @@
       <div class="info-item">
         <h4>🕐 horario</h4>
         <p>Lunes a sábados<br/>de 11:30 a 15:00</p>
+        <p class="horario-extra" id="horario-extra" hidden></p>
       </div>
 
       <div class="info-item">
@@ -1784,38 +1803,79 @@ const MENU = {
 const APERTURA = 11 * 60 + 30;   // 11:30
 const CIERRE   = 15 * 60 + 0;   // 15:00
 
+// días sueltos en que abrimos fuera del lunes-a-sábado, en fecha de Montevideo (AAAA-MM-DD).
+// Se pueden dejar vencidos: solo cuentan los de hoy en adelante.
+const APERTURAS_EXTRA = ['2026-10-04'];
+
+const NOMBRE_DIA = ['', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
+
 function horaEnMontevideo(){
   const partes = new Intl.DateTimeFormat('en-GB', {
     timeZone: 'America/Montevideo',
-    weekday: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false
+    weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hour12: false
   }).formatToParts(new Date());
   const buscar = t => (partes.find(p => p.type === t) || {}).value;
   const dias = { Mon:1, Tue:2, Wed:3, Thu:4, Fri:5, Sat:6, Sun:7 };
   return {
     dia: dias[buscar('weekday')] || 1,
     diaMes: parseInt(buscar('day'), 10),
+    fecha: buscar('year') + '-' + buscar('month') + '-' + buscar('day'),
     minutos: parseInt(buscar('hour'), 10) * 60 + parseInt(buscar('minute'), 10)
   };
 }
 
-function estadoLocal(){
-  const { dia, minutos } = horaEnMontevideo();
-  const habil = dia >= 1 && dia <= 6;   // lunes a sábado · domingo cerrado
+// abrimos de lunes a sábado, más las fechas sueltas de APERTURAS_EXTRA
+const abrimosEl = (dia, fecha) => (dia >= 1 && dia <= 6) || APERTURAS_EXTRA.includes(fecha);
 
-  if (habil && minutos >= APERTURA && minutos < CIERRE){
-    return { abierto: true, texto: 'abierto ahora', detalle: '· hasta las 15:00' };
+// cómo nombrar el próximo día en que abrimos: "mañana" o "el martes"
+function proximoDiaAbierto(fecha, dia){
+  for (let i = 1; i <= 7; i++){
+    const d = new Date(fecha + 'T12:00:00Z');
+    d.setUTCDate(d.getUTCDate() + i);
+    const diaSemana = (dia + i - 1) % 7 + 1;
+    if (abrimosEl(diaSemana, d.toISOString().slice(0, 10))){
+      return i === 1 ? 'mañana' : 'el ' + NOMBRE_DIA[diaSemana];
+    }
   }
-  if (habil && minutos < APERTURA){
-    return { abierto: false, texto: 'cerrado', detalle: '· abrimos hoy 11:30', proximo: 'hoy a las 11:30' };
+  return 'el lunes';
+}
+
+function estadoLocal(){
+  const { dia, fecha, minutos } = horaEnMontevideo();
+
+  if (abrimosEl(dia, fecha)){
+    if (minutos >= APERTURA && minutos < CIERRE){
+      return { abierto: true, texto: 'abierto ahora', detalle: '· hasta las 15:00' };
+    }
+    if (minutos < APERTURA){
+      return { abierto: false, texto: 'cerrado', detalle: '· abrimos hoy 11:30', proximo: 'hoy a las 11:30' };
+    }
   }
-  // fuera de hora: desde el sábado (y el domingo, cerrado) el próximo turno es el lunes
-  const alLunes = dia === 6 || dia === 7;
+  // ya cerramos, o hoy no abrimos: buscamos el próximo día que sí
+  const cuando = proximoDiaAbierto(fecha, dia);
   return {
     abierto: false,
     texto: 'cerrado',
-    detalle: '· abrimos ' + (alLunes ? 'el lunes 11:30' : 'mañana 11:30'),
-    proximo: alLunes ? 'el lunes a las 11:30' : 'mañana a las 11:30'
+    detalle: '· abrimos ' + cuando + ' 11:30',
+    proximo: cuando + ' a las 11:30'
   };
+}
+
+function pintarHorarioExtra(){
+  const cont = document.getElementById('horario-extra');
+  const hoy = horaEnMontevideo().fecha;
+  const proximas = APERTURAS_EXTRA.filter(f => f >= hoy);
+  if (!proximas.length){
+    cont.hidden = true;
+    return;
+  }
+  cont.hidden = false;
+  cont.textContent = 'Además abrimos ' + proximas.map(f => {
+    const d = new Date(f + 'T12:00:00Z');
+    const nombre = NOMBRE_DIA[(d.getUTCDay() + 6) % 7 + 1] + ' ' + d.getUTCDate() + '/' + (d.getUTCMonth() + 1);
+    return (f === hoy ? 'hoy ' : 'el ') + nombre;
+  }).join(', ') + ', en el mismo horario.';
 }
 
 function pintarEstado(){
@@ -2149,6 +2209,7 @@ function avisar(mensaje){
 /* ---------- arranque ---------- */
 pintarEstado();
 setInterval(pintarEstado, 60000);
+pintarHorarioExtra();
 
 pintarPastas();
 pintarVariantes();
