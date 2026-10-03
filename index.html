@@ -89,7 +89,7 @@
       "@type": "OpeningHoursSpecification",
       "dayOfWeek": ["Sunday"],
       "opens": "11:30",
-      "closes": "15:00",
+      "closes": "16:00",
       "validFrom": "2026-10-04",
       "validThrough": "2026-10-04"
     }
@@ -1809,6 +1809,14 @@ const MENU = {
 const APERTURA = 11 * 60 + 30;   // 11:30
 const CIERRE   = 15 * 60 + 0;   // 15:00
 
+// días puntuales en que estiramos o recortamos el cierre (AAAA-MM-DD → minutos)
+const CIERRES_ESPECIALES = {
+  '2026-10-04': 16 * 60 + 0   // Día del Patrimonio: hasta las 16:00
+};
+
+const cierreDe = fecha => CIERRES_ESPECIALES[fecha] || CIERRE;
+const comoHora = m => Math.floor(m / 60) + ':' + String(m % 60).padStart(2, '0');
+
 // feriados no laborables en Uruguay (ley 16.805): cerramos siempre.
 // Van como MM-DD porque son de fecha fija, así valen para cualquier año.
 const FERIADOS = {
@@ -1895,13 +1903,14 @@ function proximoDiaAbierto(fecha, dia){
 
 function estadoLocal(){
   const { dia, fecha, minutos } = horaEnMontevideo();
+  const abre = comoHora(APERTURA);
 
   if (abrimosEl(dia, fecha)){
-    if (minutos >= APERTURA && minutos < CIERRE){
-      return { abierto: true, texto: 'abierto ahora', detalle: '· hasta las 15:00' };
+    if (minutos >= APERTURA && minutos < cierreDe(fecha)){
+      return { abierto: true, texto: 'abierto ahora', detalle: '· hasta las ' + comoHora(cierreDe(fecha)) };
     }
     if (minutos < APERTURA){
-      return { abierto: false, texto: 'cerrado', detalle: '· abrimos hoy 11:30', proximo: 'hoy a las 11:30' };
+      return { abierto: false, texto: 'cerrado', detalle: '· abrimos hoy ' + abre, proximo: 'hoy a las ' + abre };
     }
   }
   // ya cerramos, o hoy no abrimos: buscamos el próximo día que sí
@@ -1910,8 +1919,8 @@ function estadoLocal(){
   return {
     abierto: false,
     texto: 'cerrado',
-    detalle: feriado ? '· ' + feriado : '· abrimos ' + cuando + ' 11:30',
-    proximo: cuando + ' a las 11:30'
+    detalle: feriado ? '· ' + feriado : '· abrimos ' + cuando + ' ' + abre,
+    proximo: cuando + ' a las ' + abre
   };
 }
 
@@ -1940,7 +1949,10 @@ function pintarHorarioExtra(){
     const d = new Date(f + 'T12:00:00Z');
     const cuando = (f === hoy ? 'hoy ' : f === manana ? 'mañana ' : 'el ') +
       NOMBRE_DIA[(d.getUTCDay() + 6) % 7 + 1] + ' ' + d.getUTCDate() + '/' + (d.getUTCMonth() + 1);
-    return 'Además abrimos ' + cuando + (aperturas[f] ? ' ' + aperturas[f] : '') + ', en el mismo horario.';
+    const horario = CIERRES_ESPECIALES[f]
+      ? 'de ' + comoHora(APERTURA) + ' a ' + comoHora(CIERRES_ESPECIALES[f])
+      : 'en el mismo horario';
+    return 'Además abrimos ' + cuando + (aperturas[f] ? ' ' + aperturas[f] : '') + ', ' + horario + '.';
   }).join(' ');
 }
 
