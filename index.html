@@ -1443,7 +1443,7 @@
 <nav>
   <div class="nav-izq">
     <a href="#inicio"><img src="tratto-logo.svg" alt="Tratto Pastas - Pasta fresca artesanal Montevideo" class="logo-mini" /></a>
-    <!-- Indicador abierto / cerrado · se calcula con el horario del local (lun-sáb 11:30-15:00 + APERTURAS_EXTRA) -->
+    <!-- Indicador abierto / cerrado · se calcula con el horario del local (lun-sáb 11:30-15:00, más feriados y aperturas sueltas) -->
     <span class="estado" id="estado" role="status" aria-live="polite">
       <span class="punto" aria-hidden="true"></span>
       <span class="estado-texto">—</span>
@@ -1819,9 +1819,27 @@ const FERIADOS = {
   '12-25': 'Navidad'
 };
 
-// días sueltos en que abrimos fuera del lunes-a-sábado, en fecha de Montevideo (AAAA-MM-DD).
-// Se pueden dejar vencidos: solo cuentan los de hoy en adelante.
-const APERTURAS_EXTRA = ['2026-10-04'];
+// días sueltos en que abrimos fuera del lunes-a-sábado, como fecha de Montevideo
+// (AAAA-MM-DD) y motivo. Se pueden dejar vencidos: solo cuentan los de hoy en adelante.
+const APERTURAS_EXTRA = {
+  // '2026-12-06': 'por las fiestas'
+};
+
+// el domingo del Día del Patrimonio abrimos todos los años. Es el domingo que sigue al
+// primer sábado de octubre, que no siempre es el primer domingo: en 2023, con el 1º en
+// domingo, cayó el 8. La fecha la fija la Comisión del Patrimonio, así que si algún año
+// la corren hay que sumarla a mano acá arriba.
+function domingoDePatrimonio(anio){
+  const primeroDeOctubre = new Date(Date.UTC(anio, 9, 1)).getUTCDay();   // 0 domingo … 6 sábado
+  const primerSabado = 1 + (6 - primeroDeOctubre + 7) % 7;
+  return anio + '-10-' + String(primerSabado + 1).padStart(2, '0');
+}
+
+// las aperturas fuera del lunes-a-sábado de un año, como { fecha: motivo }
+const aperturasDe = anio => Object.assign(
+  { [domingoDePatrimonio(anio)]: 'por el Día del Patrimonio' },
+  APERTURAS_EXTRA
+);
 
 const NOMBRE_DIA = ['', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
 
@@ -1857,9 +1875,10 @@ function feriadoDe(fecha){
   return FERIADOS[mmdd];
 }
 
-// abrimos de lunes a sábado, más las fechas de APERTURAS_EXTRA; los feriados pesan sobre las dos
+// abrimos de lunes a sábado, más las aperturas sueltas; los feriados pesan sobre las dos
 const abrimosEl = (dia, fecha) =>
-  !feriadoDe(fecha) && ((dia >= 1 && dia <= 6) || APERTURAS_EXTRA.includes(fecha));
+  !feriadoDe(fecha) &&
+  ((dia >= 1 && dia <= 6) || fecha in aperturasDe(parseInt(fecha.slice(0, 4), 10)));
 
 // cómo nombrar el próximo día en que abrimos: "mañana" o "el martes"
 function proximoDiaAbierto(fecha, dia){
@@ -1896,20 +1915,29 @@ function estadoLocal(){
   };
 }
 
+// el aviso aparece recién cuando la apertura está a menos de dos semanas,
+// así no queda todo el año anunciando un domingo lejano
 function pintarHorarioExtra(){
   const cont = document.getElementById('horario-extra');
   const hoy = horaEnMontevideo().fecha;
-  const proximas = APERTURAS_EXTRA.filter(f => f >= hoy);
+  const anio = parseInt(hoy.slice(0, 4), 10);
+  const limite = new Date(hoy + 'T12:00:00Z');
+  limite.setUTCDate(limite.getUTCDate() + 14);
+  const hasta = limite.toISOString().slice(0, 10);
+
+  const aperturas = Object.assign({}, aperturasDe(anio), aperturasDe(anio + 1));
+  const proximas = Object.keys(aperturas).filter(f => f >= hoy && f <= hasta).sort();
   if (!proximas.length){
     cont.hidden = true;
     return;
   }
   cont.hidden = false;
-  cont.textContent = 'Además abrimos ' + proximas.map(f => {
+  cont.textContent = proximas.map(f => {
     const d = new Date(f + 'T12:00:00Z');
-    const nombre = NOMBRE_DIA[(d.getUTCDay() + 6) % 7 + 1] + ' ' + d.getUTCDate() + '/' + (d.getUTCMonth() + 1);
-    return (f === hoy ? 'hoy ' : 'el ') + nombre;
-  }).join(', ') + ', en el mismo horario.';
+    const cuando = (f === hoy ? 'hoy ' : 'el ') +
+      NOMBRE_DIA[(d.getUTCDay() + 6) % 7 + 1] + ' ' + d.getUTCDate() + '/' + (d.getUTCMonth() + 1);
+    return 'Además abrimos ' + cuando + (aperturas[f] ? ' ' + aperturas[f] : '') + ', en el mismo horario.';
+  }).join(' ');
 }
 
 function pintarEstado(){
