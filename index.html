@@ -1915,15 +1915,19 @@ function estadoLocal(){
   };
 }
 
-// el aviso aparece recién cuando la apertura está a menos de dos semanas,
+// el aviso aparece durante la semana previa a la apertura,
 // así no queda todo el año anunciando un domingo lejano
 function pintarHorarioExtra(){
   const cont = document.getElementById('horario-extra');
   const hoy = horaEnMontevideo().fecha;
   const anio = parseInt(hoy.slice(0, 4), 10);
-  const limite = new Date(hoy + 'T12:00:00Z');
-  limite.setUTCDate(limite.getUTCDate() + 14);
-  const hasta = limite.toISOString().slice(0, 10);
+  const corrido = dias => {
+    const d = new Date(hoy + 'T12:00:00Z');
+    d.setUTCDate(d.getUTCDate() + dias);
+    return d.toISOString().slice(0, 10);
+  };
+  const manana = corrido(1);
+  const hasta = corrido(7);
 
   const aperturas = Object.assign({}, aperturasDe(anio), aperturasDe(anio + 1));
   const proximas = Object.keys(aperturas).filter(f => f >= hoy && f <= hasta).sort();
@@ -1934,7 +1938,7 @@ function pintarHorarioExtra(){
   cont.hidden = false;
   cont.textContent = proximas.map(f => {
     const d = new Date(f + 'T12:00:00Z');
-    const cuando = (f === hoy ? 'hoy ' : 'el ') +
+    const cuando = (f === hoy ? 'hoy ' : f === manana ? 'mañana ' : 'el ') +
       NOMBRE_DIA[(d.getUTCDay() + 6) % 7 + 1] + ' ' + d.getUTCDate() + '/' + (d.getUTCMonth() + 1);
     return 'Además abrimos ' + cuando + (aperturas[f] ? ' ' + aperturas[f] : '') + ', en el mismo horario.';
   }).join(' ');
