@@ -1641,7 +1641,7 @@
       <div class="info-item">
         <h4>🕐 horario</h4>
         <p>Lunes a sábados<br/>de 11:30 a 15:00</p>
-        <p class="horario-nota">Los feriados no laborables cerramos.</p>
+        <p class="horario-nota">Cerramos los feriados no laborables y el Día del Gastronómico.</p>
         <p class="horario-extra" id="horario-extra" hidden></p>
       </div>
 
@@ -1841,7 +1841,21 @@ function horaEnMontevideo(){
   };
 }
 
-const feriadoDe = fecha => FERIADOS[fecha.slice(5)];
+// Día del Trabajador Gastronómico: el 17 de agosto, salvo que caiga entre viernes y lunes,
+// y entonces se corre al segundo miércoles de agosto (convenio del sector).
+function diaDelGastronomico(anio){
+  const diaSemana = new Date(Date.UTC(anio, 7, 17)).getUTCDay();   // 0 domingo … 6 sábado
+  if (![5, 6, 0, 1].includes(diaSemana)) return '08-17';
+  const primeroDeAgosto = new Date(Date.UTC(anio, 7, 1)).getUTCDay();
+  const primerMiercoles = 1 + (3 - primeroDeAgosto + 7) % 7;
+  return '08-' + String(primerMiercoles + 7).padStart(2, '0');
+}
+
+function feriadoDe(fecha){
+  const mmdd = fecha.slice(5);
+  if (mmdd === diaDelGastronomico(parseInt(fecha.slice(0, 4), 10))) return 'Día del Gastronómico';
+  return FERIADOS[mmdd];
+}
 
 // abrimos de lunes a sábado, más las fechas de APERTURAS_EXTRA; los feriados pesan sobre las dos
 const abrimosEl = (dia, fecha) =>
