@@ -1255,6 +1255,11 @@
     transition: color .25s;
   }
   .info-item a:hover{ color: var(--rojo-oscuro); }
+  .horario-nota{
+    margin-top: 6px;
+    font-size: 16px !important;
+    opacity: 0.75;
+  }
   /* aviso de una apertura puntual (un domingo suelto, un feriado) */
   .horario-extra{
     margin-top: 10px;
@@ -1636,6 +1641,7 @@
       <div class="info-item">
         <h4>🕐 horario</h4>
         <p>Lunes a sábados<br/>de 11:30 a 15:00</p>
+        <p class="horario-nota">Los feriados no laborables cerramos.</p>
         <p class="horario-extra" id="horario-extra" hidden></p>
       </div>
 
@@ -1803,6 +1809,16 @@ const MENU = {
 const APERTURA = 11 * 60 + 30;   // 11:30
 const CIERRE   = 15 * 60 + 0;   // 15:00
 
+// feriados no laborables en Uruguay (ley 16.805): cerramos siempre.
+// Van como MM-DD porque son de fecha fija, así valen para cualquier año.
+const FERIADOS = {
+  '01-01': 'Año Nuevo',
+  '05-01': 'Día de los Trabajadores',
+  '07-18': 'Jura de la Constitución',
+  '08-25': 'Declaratoria de la Independencia',
+  '12-25': 'Navidad'
+};
+
 // días sueltos en que abrimos fuera del lunes-a-sábado, en fecha de Montevideo (AAAA-MM-DD).
 // Se pueden dejar vencidos: solo cuentan los de hoy en adelante.
 const APERTURAS_EXTRA = ['2026-10-04'];
@@ -1825,8 +1841,11 @@ function horaEnMontevideo(){
   };
 }
 
-// abrimos de lunes a sábado, más las fechas sueltas de APERTURAS_EXTRA
-const abrimosEl = (dia, fecha) => (dia >= 1 && dia <= 6) || APERTURAS_EXTRA.includes(fecha);
+const feriadoDe = fecha => FERIADOS[fecha.slice(5)];
+
+// abrimos de lunes a sábado, más las fechas de APERTURAS_EXTRA; los feriados pesan sobre las dos
+const abrimosEl = (dia, fecha) =>
+  !feriadoDe(fecha) && ((dia >= 1 && dia <= 6) || APERTURAS_EXTRA.includes(fecha));
 
 // cómo nombrar el próximo día en que abrimos: "mañana" o "el martes"
 function proximoDiaAbierto(fecha, dia){
@@ -1854,10 +1873,11 @@ function estadoLocal(){
   }
   // ya cerramos, o hoy no abrimos: buscamos el próximo día que sí
   const cuando = proximoDiaAbierto(fecha, dia);
+  const feriado = feriadoDe(fecha);
   return {
     abierto: false,
     texto: 'cerrado',
-    detalle: '· abrimos ' + cuando + ' 11:30',
+    detalle: feriado ? '· ' + feriado : '· abrimos ' + cuando + ' 11:30',
     proximo: cuando + ' a las 11:30'
   };
 }
