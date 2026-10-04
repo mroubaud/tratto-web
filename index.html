@@ -2107,10 +2107,24 @@ function pintarCampoHora(){
 
 function horaValida(){
   const hora = document.getElementById('hora');
-  const ok = hora.value !== '';
-  document.getElementById('hora-error').hidden = ok;
-  hora.classList.toggle('invalido', !ok);
-  return ok;
+  const error = document.getElementById('hora-error');
+  const cierre = cierreDe(horaEnMontevideo().fecha);
+
+  let problema = '';
+  if (hora.value === ''){
+    problema = 'Decinos a qué hora pasás a buscarlo.';
+  } else {
+    const [h, m] = hora.value.split(':').map(Number);
+    const minutos = h * 60 + m;
+    // la hora de cierre entra: es el último momento para pasar a buscarlo
+    if (minutos < APERTURA || minutos > cierre){
+      problema = 'Atendemos de ' + comoHora(APERTURA) + ' a ' + comoHora(cierre) + '.';
+    }
+  }
+  error.textContent = problema;
+  error.hidden = problema === '';
+  hora.classList.toggle('invalido', problema !== '');
+  return problema === '';
 }
 
 function pintarNotaNoquis(){
