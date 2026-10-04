@@ -6,7 +6,7 @@
 
 <!-- ===== SEO BÁSICO ===== -->
 <title>Tratto Pastas · Pasta fresca artesanal en Montevideo Centro</title>
-<meta name="description" content="Pasta fresca artesanal en el Centro de Montevideo. Armá tu plato en la web —fetuccini, cappellettis de calabaza y parmesano, y milanesa con salsas caseras—, mandalo por WhatsApp y pasá a buscarlo. Lunes a sábados de 11:30 a 15:00." />
+<meta name="description" content="Pasta fresca artesanal en el Centro de Montevideo. Armá tu plato en la web —fetuccini, cappellettis de calabaza, caramelle de boniato y milanesa con salsas caseras—, mandalo por WhatsApp y pasá a buscarlo. Lunes a sábados de 11:30 a 15:00." />
 <meta name="keywords" content="pasta fresca Montevideo, fetuccini artesanal, pastas caseras Centro Montevideo, pastería Uruguay, pasta para llevar Montevideo, Tratto pastas" />
 <meta name="author" content="Tratto Pastas" />
 <meta name="robots" content="index, follow" />
@@ -107,7 +107,7 @@
         "name": "Elegí tu pasta",
         "hasMenuItem": [
           {"@type":"MenuItem","name":"Fetuccini con Salsa Alfredo","description":"Terminado en rueda de queso","image":"https://pastastratto.com/fotos/fetuccini.jpg","offers":{"@type":"Offer","price":"290","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Pasta rellena con Salsa Alfredo","description":"Cappellettis de calabaza y parmesano","image":"https://pastastratto.com/fotos/pasta-rellena.jpg","offers":{"@type":"Offer","price":"350","priceCurrency":"UYU"}}
+          {"@type":"MenuItem","name":"Pasta rellena con Salsa Alfredo","description":"Cappellettis de calabaza y parmesano, o caramelle de boniato y nueces","image":"https://pastastratto.com/fotos/pasta-rellena.jpg","offers":{"@type":"Offer","price":"350","priceCurrency":"UYU"}}
         ]
       },
       {
@@ -985,6 +985,23 @@
     background: #fff;
     resize: vertical;
   }
+  .campo label span{
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+    opacity: 0.7;
+  }
+  .campo-error{
+    margin-top: 6px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 14px;
+    color: var(--rojo);
+  }
+  .campo-error[hidden]{ display: none; }
+  .campo input.invalido{
+    border-color: var(--rojo);
+    box-shadow: 0 0 0 3px rgba(137,30,30,0.12);
+  }
   .campo input:focus, .campo textarea:focus{
     outline: none;
     border-color: var(--rojo);
@@ -1533,7 +1550,7 @@
           <span class="paso-num" aria-hidden="true">1</span>
           <h3>Elegí tu pasta</h3>
         </div>
-        <p class="paso-nota">Toda la pasta es fresca, hecha a mano, y va con salsa Alfredo.</p>
+        <p class="paso-nota">Toda la pasta es fresca y hecha a mano. La salsa Alfredo va incluida, y podés pedirla sin.</p>
         <p class="paso-nota" id="nota-noquis" hidden></p>
         <div class="opciones-pasta" id="opciones-pasta" role="radiogroup" aria-label="Elegí tu pasta"></div>
 
@@ -1541,6 +1558,21 @@
         <div class="variantes" id="variantes" hidden>
           <p class="variantes-label" id="variantes-label"></p>
           <div class="chips" id="chips-variantes" role="radiogroup" aria-label="Elegí la variante"></div>
+        </div>
+
+        <!-- con o sin la salsa Alfredo que viene incluida -->
+        <div class="variantes" id="alfredo" hidden>
+          <p class="variantes-label">La salsa Alfredo va incluida</p>
+          <div class="chips" role="radiogroup" aria-label="Con o sin salsa Alfredo">
+            <label class="chip">
+              <input type="radio" name="alfredo" value="si" checked />
+              <span class="chip-texto">Con Alfredo</span>
+            </label>
+            <label class="chip">
+              <input type="radio" name="alfredo" value="no" />
+              <span class="chip-texto">Sin Alfredo</span>
+            </label>
+          </div>
         </div>
       </div>
 
@@ -1600,8 +1632,14 @@
       </div>
 
       <div class="campo">
+        <label for="hora">a qué hora pasás <span id="hora-rango"></span></label>
+        <input type="time" id="hora" step="300" required aria-describedby="hora-error" />
+        <p class="campo-error" id="hora-error" hidden>Decinos a qué hora pasás a buscarlo.</p>
+      </div>
+
+      <div class="campo">
         <label for="nota">algo para aclarar (opcional)</label>
-        <textarea id="nota" rows="2" placeholder="Ej: sin queso arriba, paso 13:15"></textarea>
+        <textarea id="nota" rows="2" placeholder="Ej: sin queso arriba"></textarea>
       </div>
 
       <div class="aviso-cerrado" id="aviso-cerrado" hidden></div>
@@ -1751,15 +1789,22 @@ const MENU = {
       desc: 'Terminado en rueda de queso, con salsa Alfredo',
       precio: 290,
       foto: 'fotos/fetuccini.jpg',
-      alt: 'Fetuccini fresco de Tratto terminado en rueda de queso'
+      alt: 'Fetuccini fresco de Tratto terminado en rueda de queso',
+      alfredoOpcional: true
     },
     {
       id: 'rellena',
       nombre: 'Pasta rellena',
-      desc: 'Cappellettis de calabaza y parmesano · con salsa Alfredo',
+      desc: 'De calabaza o de boniato · con salsa Alfredo',
       precio: 350,
       foto: 'fotos/pasta-rellena.jpg',
-      alt: 'Cappellettis de calabaza y parmesano de Tratto con salsa y queso rallado'
+      alt: 'Pasta rellena artesanal de Tratto con salsa y queso rallado',
+      alfredoOpcional: true,
+      variantesLabel: '¿Qué relleno querés?',
+      variantes: [
+        { id: 'cappellettis', nombre: 'Cappellettis de calabaza y parmesano' },
+        { id: 'caramelle',    nombre: 'Caramelle de boniato y nueces' }
+      ]
     },
     {
       id: 'milanesa',
@@ -1982,6 +2027,7 @@ const pastasDisponibles = () => MENU.pastas.filter(p => !p.soloDia29 || esDia29(
 const sel = {
   pastaId: pastasDisponibles()[0].id,
   varianteId: null,
+  conAlfredo: true,
   salsas: [],
   toppings: []
 };
@@ -2012,6 +2058,7 @@ function pintarPastas(){
     input.addEventListener('change', () => {
       sel.pastaId = input.value;
       pintarVariantes();
+      pintarAlfredo();
       pintarPrecioPlato();
     });
   });
@@ -2039,6 +2086,31 @@ function pintarVariantes(){
   document.querySelectorAll('input[name="variante"]').forEach(input => {
     input.addEventListener('change', () => { sel.varianteId = input.value; });
   });
+}
+
+function pintarAlfredo(){
+  const cont = document.getElementById('alfredo');
+  cont.hidden = !buscar(MENU.pastas, sel.pastaId).alfredoOpcional;
+  if (cont.hidden) sel.conAlfredo = true;   // los demás platos van siempre con Alfredo
+}
+
+// el rango que se muestra sale del horario de hoy, que algún día puede ser distinto
+function pintarCampoHora(){
+  const { fecha } = horaEnMontevideo();
+  const hora = document.getElementById('hora');
+  const hhmm = m => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+  hora.min = hhmm(APERTURA);
+  hora.max = hhmm(cierreDe(fecha));
+  document.getElementById('hora-rango').textContent =
+    '(entre ' + comoHora(APERTURA) + ' y ' + comoHora(cierreDe(fecha)) + ')';
+}
+
+function horaValida(){
+  const hora = document.getElementById('hora');
+  const ok = hora.value !== '';
+  document.getElementById('hora-error').hidden = ok;
+  hora.classList.toggle('invalido', !ok);
+  return ok;
 }
 
 function pintarNotaNoquis(){
@@ -2113,7 +2185,7 @@ function nombreLinea(linea){
 
 function detalleLinea(linea){
   if (linea.tipo === 'extra') return [];
-  const partes = ['salsa Alfredo'];
+  const partes = [linea.conAlfredo ? 'salsa Alfredo' : 'sin salsa Alfredo'];
   const pasta = buscar(MENU.pastas, linea.pastaId);
   if (pasta.variantes && linea.varianteId){
     partes.unshift(buscar(pasta.variantes, linea.varianteId).nombre);
@@ -2145,6 +2217,7 @@ function agregarPlato(){
     tipo: 'plato',
     pastaId: sel.pastaId,
     varianteId: pasta.variantes ? sel.varianteId : null,
+    conAlfredo: pasta.alfredoOpcional ? sel.conAlfredo : true,
     salsas: [...sel.salsas],
     toppings: [...sel.toppings],
     cant: 1
@@ -2246,8 +2319,10 @@ function textoPedido(){
   lineas.push('', `*TOTAL: ${pesos(totalPedido())}*`, '');
 
   const nombre = document.getElementById('nombre').value.trim();
+  const hora = document.getElementById('hora').value;
   const nota = document.getElementById('nota').value.trim();
   if (nombre) lineas.push(`Nombre: ${nombre}`);
+  lineas.push(`Paso a buscarlo: ${hora} hs`);
   if (nota) lineas.push(`Aclaración: ${nota}`);
   lineas.push('Retiro en el local (Juncal 1327, Apto. 003)');
 
@@ -2261,6 +2336,10 @@ const urlWhatsApp = () => 'https://wa.me/' + TEL_WA + '?text=' + encodeURICompon
 
 function enviarPedido(){
   if (!pedido.length) return;
+  if (!horaValida()){
+    document.getElementById('hora').focus();
+    return;
+  }
   const url = urlWhatsApp();
   window.open(url, '_blank', 'noopener');
   document.getElementById('conf-reabrir').href = url;
@@ -2291,12 +2370,19 @@ pintarHorarioExtra();
 
 pintarPastas();
 pintarVariantes();
+pintarAlfredo();
 pintarNotaNoquis();
+pintarCampoHora();
 pintarChips('chips-salsas', MENU.salsas, 'salsas');
 pintarChips('chips-toppings', MENU.toppings, 'toppings');
 pintarExtras();
 pintarPrecioPlato();
 pintarPedido();
+
+document.querySelectorAll('input[name="alfredo"]').forEach(input => {
+  input.addEventListener('change', () => { sel.conAlfredo = input.value === 'si'; });
+});
+document.getElementById('hora').addEventListener('input', horaValida);
 
 document.getElementById('btn-agregar').addEventListener('click', agregarPlato);
 document.getElementById('btn-enviar').addEventListener('click', enviarPedido);
