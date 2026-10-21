@@ -118,7 +118,6 @@
           {"@type":"MenuItem","name":"Ragú de carne","offers":{"@type":"Offer","price":"120","priceCurrency":"UYU"}},
           {"@type":"MenuItem","name":"Cuatro quesos","offers":{"@type":"Offer","price":"120","priceCurrency":"UYU"}},
           {"@type":"MenuItem","name":"Pesto de albahaca","offers":{"@type":"Offer","price":"100","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Pomodoro","offers":{"@type":"Offer","price":"100","priceCurrency":"UYU"}},
           {"@type":"MenuItem","name":"Salsa rosa","offers":{"@type":"Offer","price":"100","priceCurrency":"UYU"}}
         ]
       },
@@ -729,6 +728,14 @@
     letter-spacing: 1.4px;
     color: var(--rojo);
     margin-bottom: 10px;
+  }
+  .variantes-aclara{
+    font-weight: 400;
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--tinta);
+    opacity: .65;
   }
   .variantes[hidden]{ display: none; }
 
@@ -1562,7 +1569,7 @@
 
         <!-- con o sin la salsa Alfredo que viene incluida -->
         <div class="variantes" id="alfredo" hidden>
-          <p class="variantes-label">La salsa Alfredo va incluida</p>
+          <p class="variantes-label">La salsa Alfredo va incluida <span class="variantes-aclara">· pero podés sacarla si querés</span></p>
           <div class="chips" role="radiogroup" aria-label="Con o sin salsa Alfredo">
             <label class="chip">
               <input type="radio" name="alfredo" value="si" checked />
@@ -1836,7 +1843,6 @@ const MENU = {
     { id: 'ragu',     nombre: 'Ragú de carne',     precio: 120 },
     { id: 'quesos',   nombre: 'Cuatro quesos',     precio: 120 },
     { id: 'pesto',    nombre: 'Pesto de albahaca', precio: 100 },
-    { id: 'pomodoro', nombre: 'Pomodoro',          precio: 100 },
     { id: 'rosa',     nombre: 'Salsa rosa',        precio: 100 }
   ],
   toppings: [
