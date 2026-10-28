@@ -137,7 +137,7 @@
         "hasMenuItem": [
           {"@type":"MenuItem","name":"Milanesa de pollo + Fetuccini Alfredo","image":"https://pastastratto.com/fotos/milanesa.jpg","offers":{"@type":"Offer","price":"440","priceCurrency":"UYU"}},
           {"@type":"MenuItem","name":"Milanesa de carne + Fetuccini Alfredo","image":"https://pastastratto.com/fotos/milanesa.jpg","offers":{"@type":"Offer","price":"470","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Ñoquis caseros","description":"Solo los 29 de cada mes","image":"https://pastastratto.com/fotos/noquis.jpg","offers":{"@type":"Offer","price":"440","priceCurrency":"UYU"}}
+          {"@type":"MenuItem","name":"Ñoquis caseros","description":"Todos los días de la última semana de cada mes","image":"https://pastastratto.com/fotos/noquis.jpg","offers":{"@type":"Offer","price":"440","priceCurrency":"UYU"}}
         ]
       },
       {
@@ -1832,12 +1832,12 @@ const MENU = {
     {
       id: 'noquis',
       nombre: 'Ñoquis',
-      desc: 'Caseros, la tradición del 29',
+      desc: 'Caseros, la última semana del mes',
       precio: 440,
       foto: 'fotos/noquis.jpg',
       alt: 'Ñoquis caseros de Tratto con pesto, en el vaso para llevar',
-      badge: 'solo hoy, 29',
-      soloDia29: true
+      badge: 'solo esta semana',
+      soloUltimaSemana: true
     }
   ],
   salsas: [
@@ -2030,9 +2030,14 @@ function pintarEstado(){
 }
 
 /* ---------- estado de la selección y del pedido ---------- */
-// los ñoquis son la tradición del 29: solo ese día entran a la carta
-const esDia29 = () => horaEnMontevideo().diaMes === 29;
-const pastasDisponibles = () => MENU.pastas.filter(p => !p.soloDia29 || esDia29());
+// los ñoquis entran a la carta los últimos 7 días de cada mes (siempre incluye el 29)
+function esUltimaSemana(){
+  const hoy = horaEnMontevideo();
+  const [anio, mes] = hoy.fecha.split('-').map(Number);
+  const diasDelMes = new Date(Date.UTC(anio, mes, 0)).getUTCDate();
+  return hoy.diaMes > diasDelMes - 7;
+}
+const pastasDisponibles = () => MENU.pastas.filter(p => !p.soloUltimaSemana || esUltimaSemana());
 
 const sel = {
   pastaId: pastasDisponibles()[0].id,
@@ -2156,13 +2161,13 @@ function horaValida(){
 
 function pintarNotaNoquis(){
   const nota = document.getElementById('nota-noquis');
-  const noquis = MENU.pastas.find(p => p.soloDia29);
-  if (!noquis || esDia29()){
+  const noquis = MENU.pastas.find(p => p.soloUltimaSemana);
+  if (!noquis || esUltimaSemana()){
     nota.hidden = true;
     return;
   }
   nota.hidden = false;
-  nota.textContent = '🗓️ Los 29 de cada mes sumamos ñoquis caseros a ' + pesos(noquis.precio) + '.';
+  nota.textContent = '🗓️ La última semana de cada mes sumamos ñoquis caseros a ' + pesos(noquis.precio) + '.';
 }
 
 function pintarChips(contId, lista, clave){
