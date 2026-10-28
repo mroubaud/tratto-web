@@ -137,7 +137,7 @@
         "hasMenuItem": [
           {"@type":"MenuItem","name":"Milanesa de pollo + Fetuccini Alfredo","image":"https://pastastratto.com/fotos/milanesa.jpg","offers":{"@type":"Offer","price":"440","priceCurrency":"UYU"}},
           {"@type":"MenuItem","name":"Milanesa de carne + Fetuccini Alfredo","image":"https://pastastratto.com/fotos/milanesa.jpg","offers":{"@type":"Offer","price":"470","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Ñoquis caseros","description":"Todos los días de la última semana de cada mes","image":"https://pastastratto.com/fotos/noquis.jpg","offers":{"@type":"Offer","price":"440","priceCurrency":"UYU"}}
+          {"@type":"MenuItem","name":"Ñoquis caseros","description":"Con salsa a elección. Todos los días de la última semana de cada mes","image":"https://pastastratto.com/fotos/noquis.jpg","offers":{"@type":"Offer","price":"440","priceCurrency":"UYU"}}
         ]
       },
       {
@@ -1591,7 +1591,7 @@
           <span class="paso-num" aria-hidden="true">2</span>
           <h3>Sumá tu salsa</h3>
         </div>
-        <p class="paso-nota">Opcional · combiná las que quieras, $100 cada una.</p>
+        <p class="paso-nota" id="nota-salsas">Opcional · combiná las que quieras.</p>
         <div class="chips" id="chips-salsas"></div>
       </div>
 
@@ -1836,12 +1836,13 @@ const MENU = {
     {
       id: 'noquis',
       nombre: 'Ñoquis',
-      desc: 'Caseros, la última semana del mes',
+      desc: 'Caseros, con salsa a elección',
       precio: 440,
       foto: 'fotos/noquis.jpg',
       alt: 'Ñoquis caseros de Tratto con pesto, en el vaso para llevar',
       badge: 'solo esta semana',
-      soloUltimaSemana: true
+      soloUltimaSemana: true,
+      salsasIncluidas: true
     }
   ],
   salsas: [
@@ -1863,6 +1864,11 @@ const MENU = {
     { id: 'agua',     nombre: 'Agua',                   detalle: '625 ml',   precio: 80  }
   ]
 };
+
+// los ñoquis tienen precio fijo: las salsas, Alfredo incluida, se combinan sin costo
+const salsasDe = pasta => pasta.salsasIncluidas
+  ? [{ id: 'alfredo', nombre: 'Alfredo', enPedido: 'salsa Alfredo', precio: 0 }].concat(MENU.salsas.map(x => ({ ...x, precio: 0 })))
+  : MENU.salsas;
 
 /* ---------- horario del local ---------- */
 const APERTURA = 11 * 60 + 30;   // 11:30
@@ -2078,6 +2084,7 @@ function pintarPastas(){
       sel.pastaId = input.value;
       pintarVariantes();
       pintarAlfredo();
+      pintarSalsas();
       pintarPrecioPlato();
     });
   });
@@ -2157,12 +2164,25 @@ function pintarNotaNoquis(){
   nota.textContent = '🗓️ La última semana de cada mes sumamos ñoquis caseros a ' + pesos(noquis.precio) + '.';
 }
 
+function pintarSalsas(){
+  const pasta = buscar(MENU.pastas, sel.pastaId);
+  const lista = salsasDe(pasta);
+  // al cambiar de plato se descartan las que no existen en la nueva lista (la Alfredo de los ñoquis)
+  sel.salsas = sel.salsas.filter(id => buscar(lista, id));
+  // los ñoquis no van solos: arrancan con la Alfredo marcada
+  if (pasta.salsasIncluidas && !sel.salsas.length) sel.salsas = ['alfredo'];
+  document.getElementById('nota-salsas').textContent = pasta.salsasIncluidas
+    ? 'Con los ñoquis van incluidas · combiná las que quieras, el precio no cambia.'
+    : 'Opcional · combiná las que quieras.';
+  pintarChips('chips-salsas', lista, 'salsas');
+}
+
 function pintarChips(contId, lista, clave){
   document.getElementById(contId).innerHTML = lista.map(x => `
     <label class="chip">
       <input type="checkbox" value="${x.id}" ${sel[clave].includes(x.id) ? 'checked' : ''} />
       <span class="chip-texto">${x.nombre}</span>
-      <span class="chip-precio">+${pesos(x.precio)}</span>
+      <span class="chip-precio">${x.precio ? '+' + pesos(x.precio) : 'incluida'}</span>
     </label>
   `).join('');
 
@@ -2201,7 +2221,7 @@ function pintarExtras(){
 function precioPlatoActual(){
   const pasta = buscar(MENU.pastas, sel.pastaId);
   let total = pasta.precio;
-  sel.salsas.forEach(id => { total += buscar(MENU.salsas, id).precio; });
+  sel.salsas.forEach(id => { total += buscar(salsasDe(pasta), id).precio; });
   sel.toppings.forEach(id => { total += buscar(MENU.toppings, id).precio; });
   return total;
 }
@@ -2218,13 +2238,22 @@ function nombreLinea(linea){
 
 function detalleLinea(linea){
   if (linea.tipo === 'extra') return [];
-  const partes = [linea.conAlfredo ? 'salsa Alfredo' : 'sin salsa Alfredo'];
   const pasta = buscar(MENU.pastas, linea.pastaId);
+  const nombresSalsas = linea.salsas.map(id => {
+    const salsa = buscar(salsasDe(pasta), id);
+    return salsa.enPedido || salsa.nombre.toLowerCase();
+  }).join(', ');
+  if (pasta.salsasIncluidas){
+    // en los ñoquis las salsas elegidas son la salsa del plato, no un agregado
+    return [nombresSalsas ? 'con ' + nombresSalsas : 'sin salsa']
+      .concat(linea.toppings.length ? ['+ ' + linea.toppings.map(id => buscar(MENU.toppings, id).nombre.toLowerCase()).join(', ')] : []);
+  }
+  const partes = [linea.conAlfredo ? 'salsa Alfredo' : 'sin salsa Alfredo'];
   if (pasta.variantes && linea.varianteId){
     partes.unshift(buscar(pasta.variantes, linea.varianteId).nombre);
   }
   if (linea.salsas.length){
-    partes.push('+ ' + linea.salsas.map(id => buscar(MENU.salsas, id).nombre.toLowerCase()).join(', '));
+    partes.push('+ ' + nombresSalsas);
   }
   if (linea.toppings.length){
     partes.push('+ ' + linea.toppings.map(id => buscar(MENU.toppings, id).nombre.toLowerCase()).join(', '));
@@ -2234,8 +2263,9 @@ function detalleLinea(linea){
 
 function precioUnitario(linea){
   if (linea.tipo === 'extra') return buscar(MENU.extras, linea.itemId).precio;
-  let total = buscar(MENU.pastas, linea.pastaId).precio;
-  linea.salsas.forEach(id => { total += buscar(MENU.salsas, id).precio; });
+  const pasta = buscar(MENU.pastas, linea.pastaId);
+  let total = pasta.precio;
+  linea.salsas.forEach(id => { total += buscar(salsasDe(pasta), id).precio; });
   linea.toppings.forEach(id => { total += buscar(MENU.toppings, id).precio; });
   return total;
 }
@@ -2258,7 +2288,7 @@ function agregarPlato(){
   // se limpian los agregados para que el próximo plato arranque de cero
   sel.salsas = [];
   sel.toppings = [];
-  pintarChips('chips-salsas', MENU.salsas, 'salsas');
+  pintarSalsas();
   pintarChips('chips-toppings', MENU.toppings, 'toppings');
   pintarPrecioPlato();
   pintarPedido();
@@ -2406,7 +2436,7 @@ pintarVariantes();
 pintarAlfredo();
 pintarNotaNoquis();
 pintarCampoHora();
-pintarChips('chips-salsas', MENU.salsas, 'salsas');
+pintarSalsas();
 pintarChips('chips-toppings', MENU.toppings, 'toppings');
 pintarExtras();
 pintarPrecioPlato();
