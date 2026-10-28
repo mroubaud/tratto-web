@@ -1816,18 +1816,22 @@ const MENU = {
       ]
     },
     {
-      id: 'milanesa',
-      nombre: 'Milanesa + Fetuccini',
-      desc: 'De pollo o de carne · el especial de la casa',
+      id: 'milanesa-pollo',
+      nombre: 'Milanesa de pollo + Fetuccini',
+      desc: 'Con salsa Alfredo · el especial de la casa',
       precio: 440,
       foto: 'fotos/milanesa.jpg',
-      alt: 'Milanesa con fetuccini Alfredo y queso rallado en bowl de Tratto',
-      badge: 'el especial',
-      variantesLabel: '¿La querés de pollo o de carne?',
-      variantes: [
-        { id: 'pollo', nombre: 'De pollo', precio: 440 },
-        { id: 'carne', nombre: 'De carne', precio: 470 }
-      ]
+      alt: 'Milanesa de pollo con fetuccini Alfredo y queso rallado en bowl de Tratto',
+      badge: 'el especial'
+    },
+    {
+      id: 'milanesa-carne',
+      nombre: 'Milanesa de carne + Fetuccini',
+      desc: 'Con salsa Alfredo · el especial de la casa',
+      precio: 470,
+      foto: 'fotos/milanesa.jpg',
+      alt: 'Milanesa de carne con fetuccini Alfredo y queso rallado en bowl de Tratto',
+      badge: 'el especial'
     },
     {
       id: 'noquis',
@@ -2053,19 +2057,6 @@ let uid = 0;
 const pesos = n => '$' + n.toLocaleString('es-UY');
 const buscar = (lista, id) => lista.find(x => x.id === id);
 
-// algunas variantes tienen precio propio (la milanesa de carne sale más que la de pollo)
-function precioBase(pastaId, varianteId){
-  const pasta = buscar(MENU.pastas, pastaId);
-  const variante = pasta.variantes && buscar(pasta.variantes, varianteId);
-  return (variante && variante.precio) || pasta.precio;
-}
-
-// en la tarjeta se muestra el más barato cuando el precio depende de la variante
-function precioTarjeta(p){
-  const precios = (p.variantes || []).map(v => v.precio).filter(Boolean);
-  return precios.length ? 'desde ' + pesos(Math.min(...precios)) : pesos(p.precio);
-}
-
 /* ---------- render de los pasos ---------- */
 function pintarPastas(){
   document.getElementById('opciones-pasta').innerHTML = pastasDisponibles().map(p => `
@@ -2077,7 +2068,7 @@ function pintarPastas(){
       <span class="op-cuerpo">
         <span class="op-nombre">${p.nombre}</span>
         <span class="op-desc">${p.desc}</span>
-        <span class="op-precio">${precioTarjeta(p)}</span>
+        <span class="op-precio">${pesos(p.precio)}</span>
       </span>
     </label>
   `).join('');
@@ -2108,15 +2099,11 @@ function pintarVariantes(){
     <label class="chip">
       <input type="radio" name="variante" value="${v.id}" ${v.id === sel.varianteId ? 'checked' : ''} />
       <span class="chip-texto">${v.nombre}</span>
-      ${v.precio ? `<span class="chip-precio">${pesos(v.precio)}</span>` : ''}
     </label>
   `).join('');
 
   document.querySelectorAll('input[name="variante"]').forEach(input => {
-    input.addEventListener('change', () => {
-      sel.varianteId = input.value;
-      pintarPrecioPlato();
-    });
+    input.addEventListener('change', () => { sel.varianteId = input.value; });
   });
 }
 
@@ -2212,7 +2199,8 @@ function pintarExtras(){
 }
 
 function precioPlatoActual(){
-  let total = precioBase(sel.pastaId, sel.varianteId);
+  const pasta = buscar(MENU.pastas, sel.pastaId);
+  let total = pasta.precio;
   sel.salsas.forEach(id => { total += buscar(MENU.salsas, id).precio; });
   sel.toppings.forEach(id => { total += buscar(MENU.toppings, id).precio; });
   return total;
@@ -2246,7 +2234,7 @@ function detalleLinea(linea){
 
 function precioUnitario(linea){
   if (linea.tipo === 'extra') return buscar(MENU.extras, linea.itemId).precio;
-  let total = precioBase(linea.pastaId, linea.varianteId);
+  let total = buscar(MENU.pastas, linea.pastaId).precio;
   linea.salsas.forEach(id => { total += buscar(MENU.salsas, id).precio; });
   linea.toppings.forEach(id => { total += buscar(MENU.toppings, id).precio; });
   return total;
