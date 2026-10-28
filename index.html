@@ -6,7 +6,7 @@
 
 <!-- ===== SEO BÁSICO ===== -->
 <title>Tratto Pastas · Pasta fresca artesanal en Montevideo Centro</title>
-<meta name="description" content="Pasta fresca artesanal en el Centro de Montevideo. Armá tu plato en la web —fetuccini, cappellettis de calabaza, caramelle de boniato y milanesa con salsas caseras—, mandalo por WhatsApp y pasá a buscarlo. Lunes a sábados de 11:30 a 15:00." />
+<meta name="description" content="Pasta fresca artesanal en el Centro de Montevideo. Armá tu plato en la web —fetuccini, cappellettis de calabaza, caramelle de boniato y milanesa con salsas caseras—, mandalo por WhatsApp y pasá a buscarlo. Lunes a sábados de 11:30 a 15:30." />
 <meta name="keywords" content="pasta fresca Montevideo, fetuccini artesanal, pastas caseras Centro Montevideo, pastería Uruguay, pasta para llevar Montevideo, Tratto pastas" />
 <meta name="author" content="Tratto Pastas" />
 <meta name="robots" content="index, follow" />
@@ -83,7 +83,7 @@
       "@type": "OpeningHoursSpecification",
       "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
       "opens": "11:30",
-      "closes": "15:00"
+      "closes": "15:30"
     },
     {
       "@type": "OpeningHoursSpecification",
@@ -117,7 +117,7 @@
           {"@type":"MenuItem","name":"Crema de hongos","offers":{"@type":"Offer","price":"120","priceCurrency":"UYU"}},
           {"@type":"MenuItem","name":"Ragú de carne","offers":{"@type":"Offer","price":"120","priceCurrency":"UYU"}},
           {"@type":"MenuItem","name":"Cuatro quesos","offers":{"@type":"Offer","price":"120","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Pesto de albahaca","offers":{"@type":"Offer","price":"100","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Pesto de albahaca","offers":{"@type":"Offer","price":"120","priceCurrency":"UYU"}},
           {"@type":"MenuItem","name":"Salsa rosa","offers":{"@type":"Offer","price":"100","priceCurrency":"UYU"}}
         ]
       },
@@ -125,8 +125,10 @@
         "@type": "MenuSection",
         "name": "Toppings",
         "hasMenuItem": [
-          {"@type":"MenuItem","name":"Pollo en cubos","offers":{"@type":"Offer","price":"50","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Panceta en crispy","offers":{"@type":"Offer","price":"30","priceCurrency":"UYU"}}
+          {"@type":"MenuItem","name":"Pollo en cubos","offers":{"@type":"Offer","price":"60","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Panceta en crispy","offers":{"@type":"Offer","price":"40","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Milanesa de pollo","offers":{"@type":"Offer","price":"230","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Milanesa de carne","offers":{"@type":"Offer","price":"270","priceCurrency":"UYU"}}
         ]
       },
       {
@@ -134,7 +136,7 @@
         "name": "Especiales de la casa",
         "hasMenuItem": [
           {"@type":"MenuItem","name":"Milanesa de pollo + Fetuccini Alfredo","image":"https://pastastratto.com/fotos/milanesa.jpg","offers":{"@type":"Offer","price":"440","priceCurrency":"UYU"}},
-          {"@type":"MenuItem","name":"Milanesa de carne + Fetuccini Alfredo","image":"https://pastastratto.com/fotos/milanesa.jpg","offers":{"@type":"Offer","price":"440","priceCurrency":"UYU"}},
+          {"@type":"MenuItem","name":"Milanesa de carne + Fetuccini Alfredo","image":"https://pastastratto.com/fotos/milanesa.jpg","offers":{"@type":"Offer","price":"470","priceCurrency":"UYU"}},
           {"@type":"MenuItem","name":"Ñoquis caseros","description":"Solo los 29 de cada mes","image":"https://pastastratto.com/fotos/noquis.jpg","offers":{"@type":"Offer","price":"440","priceCurrency":"UYU"}}
         ]
       },
@@ -1467,7 +1469,7 @@
 <nav>
   <div class="nav-izq">
     <a href="#inicio"><img src="tratto-logo.svg" alt="Tratto Pastas - Pasta fresca artesanal Montevideo" class="logo-mini" /></a>
-    <!-- Indicador abierto / cerrado · se calcula con el horario del local (lun-sáb 11:30-15:00, más feriados y aperturas sueltas) -->
+    <!-- Indicador abierto / cerrado · se calcula con el horario del local (lun-sáb 11:30-15:30, más feriados y aperturas sueltas) -->
     <span class="estado" id="estado" role="status" aria-live="polite">
       <span class="punto" aria-hidden="true"></span>
       <span class="estado-texto">—</span>
@@ -1685,7 +1687,7 @@
 
       <div class="info-item">
         <h4>🕐 horario</h4>
-        <p>Lunes a sábados<br/>de 11:30 a 15:00</p>
+        <p>Lunes a sábados<br/>de 11:30 a 15:30</p>
         <p class="horario-nota">Cerramos los feriados no laborables y el Día del Gastronómico.</p>
         <p class="horario-extra" id="horario-extra" hidden></p>
       </div>
@@ -1823,8 +1825,8 @@ const MENU = {
       badge: 'el especial',
       variantesLabel: '¿La querés de pollo o de carne?',
       variantes: [
-        { id: 'pollo', nombre: 'De pollo' },
-        { id: 'carne', nombre: 'De carne' }
+        { id: 'pollo', nombre: 'De pollo', precio: 440 },
+        { id: 'carne', nombre: 'De carne', precio: 470 }
       ]
     },
     {
@@ -1842,12 +1844,14 @@ const MENU = {
     { id: 'hongos',   nombre: 'Crema de hongos',   precio: 120 },
     { id: 'ragu',     nombre: 'Ragú de carne',     precio: 120 },
     { id: 'quesos',   nombre: 'Cuatro quesos',     precio: 120 },
-    { id: 'pesto',    nombre: 'Pesto de albahaca', precio: 100 },
+    { id: 'pesto',    nombre: 'Pesto de albahaca', precio: 120 },
     { id: 'rosa',     nombre: 'Salsa rosa',        precio: 100 }
   ],
   toppings: [
-    { id: 'pollo',   nombre: 'Pollo en cubos',    precio: 50 },
-    { id: 'panceta', nombre: 'Panceta en crispy', precio: 30 }
+    { id: 'pollo',      nombre: 'Pollo en cubos',    precio: 60 },
+    { id: 'panceta',    nombre: 'Panceta en crispy', precio: 40 },
+    { id: 'mila-pollo', nombre: 'Milanesa de pollo', precio: 230 },
+    { id: 'mila-carne', nombre: 'Milanesa de carne', precio: 270 }
   ],
   extras: [
     { id: 'tiramisu', nombre: 'Tiramisú de mascarpone', detalle: 'postre',   precio: 190 },
@@ -1858,7 +1862,7 @@ const MENU = {
 
 /* ---------- horario del local ---------- */
 const APERTURA = 11 * 60 + 30;   // 11:30
-const CIERRE   = 15 * 60 + 0;   // 15:00
+const CIERRE   = 15 * 60 + 30;  // 15:30
 
 // días puntuales en que estiramos o recortamos el cierre (AAAA-MM-DD → minutos)
 const CIERRES_ESPECIALES = {
@@ -2044,6 +2048,19 @@ let uid = 0;
 const pesos = n => '$' + n.toLocaleString('es-UY');
 const buscar = (lista, id) => lista.find(x => x.id === id);
 
+// algunas variantes tienen precio propio (la milanesa de carne sale más que la de pollo)
+function precioBase(pastaId, varianteId){
+  const pasta = buscar(MENU.pastas, pastaId);
+  const variante = pasta.variantes && buscar(pasta.variantes, varianteId);
+  return (variante && variante.precio) || pasta.precio;
+}
+
+// en la tarjeta se muestra el más barato cuando el precio depende de la variante
+function precioTarjeta(p){
+  const precios = (p.variantes || []).map(v => v.precio).filter(Boolean);
+  return precios.length ? 'desde ' + pesos(Math.min(...precios)) : pesos(p.precio);
+}
+
 /* ---------- render de los pasos ---------- */
 function pintarPastas(){
   document.getElementById('opciones-pasta').innerHTML = pastasDisponibles().map(p => `
@@ -2055,7 +2072,7 @@ function pintarPastas(){
       <span class="op-cuerpo">
         <span class="op-nombre">${p.nombre}</span>
         <span class="op-desc">${p.desc}</span>
-        <span class="op-precio">${pesos(p.precio)}</span>
+        <span class="op-precio">${precioTarjeta(p)}</span>
       </span>
     </label>
   `).join('');
@@ -2086,11 +2103,15 @@ function pintarVariantes(){
     <label class="chip">
       <input type="radio" name="variante" value="${v.id}" ${v.id === sel.varianteId ? 'checked' : ''} />
       <span class="chip-texto">${v.nombre}</span>
+      ${v.precio ? `<span class="chip-precio">${pesos(v.precio)}</span>` : ''}
     </label>
   `).join('');
 
   document.querySelectorAll('input[name="variante"]').forEach(input => {
-    input.addEventListener('change', () => { sel.varianteId = input.value; });
+    input.addEventListener('change', () => {
+      sel.varianteId = input.value;
+      pintarPrecioPlato();
+    });
   });
 }
 
@@ -2186,8 +2207,7 @@ function pintarExtras(){
 }
 
 function precioPlatoActual(){
-  const pasta = buscar(MENU.pastas, sel.pastaId);
-  let total = pasta.precio;
+  let total = precioBase(sel.pastaId, sel.varianteId);
   sel.salsas.forEach(id => { total += buscar(MENU.salsas, id).precio; });
   sel.toppings.forEach(id => { total += buscar(MENU.toppings, id).precio; });
   return total;
@@ -2221,7 +2241,7 @@ function detalleLinea(linea){
 
 function precioUnitario(linea){
   if (linea.tipo === 'extra') return buscar(MENU.extras, linea.itemId).precio;
-  let total = buscar(MENU.pastas, linea.pastaId).precio;
+  let total = precioBase(linea.pastaId, linea.varianteId);
   linea.salsas.forEach(id => { total += buscar(MENU.salsas, id).precio; });
   linea.toppings.forEach(id => { total += buscar(MENU.toppings, id).precio; });
   return total;
