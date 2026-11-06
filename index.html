@@ -409,6 +409,33 @@
     animation: fadeUp 1s ease-out .3s both;
   }
 
+  /* cartel de portada para una fecha puntual */
+  .aviso-portada{
+    margin: 22px 0 4px;
+    padding: 16px 20px;
+    max-width: 520px;
+    background: var(--rojo);
+    color: var(--crema-claro);
+    border-radius: 14px;
+    transform: rotate(-0.6deg);
+    box-shadow: 0 10px 24px rgba(137,30,30,0.22);
+    animation: fadeUp 1s ease-out .4s both;
+  }
+  .aviso-portada[hidden]{ display: none; }
+  .aviso-titulo{
+    font-family: 'Ribes', sans-serif;
+    font-size: clamp(26px, 3vw, 34px);
+    line-height: 1.05;
+    color: var(--amarillo);
+  }
+  .aviso-texto{
+    font-family: 'Manrope', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    margin-top: 6px;
+    opacity: 0.92;
+  }
+
   .hero-cta-group{
     margin-top: 34px;
     display: flex;
@@ -1508,6 +1535,12 @@
       <h1 class="hero-tagline">pasta fresca,<br/>hecha a mano</h1>
       <p class="hero-sub">Amasada cada mañana en pleno Centro de Montevideo. Armá tu plato acá, mandalo por WhatsApp y pasá a buscarlo.</p>
 
+      <!-- cartel que solo aparece en las fechas de AVISOS_PORTADA -->
+      <div class="aviso-portada" id="aviso-portada" hidden>
+        <p class="aviso-titulo" id="aviso-titulo"></p>
+        <p class="aviso-texto" id="aviso-texto"></p>
+      </div>
+
       <div class="hero-cta-group">
         <a href="#pedido" class="btn-primary">armá tu pedido</a>
         <a href="#visita" class="btn-secondary">cómo llegar</a>
@@ -2062,7 +2095,19 @@ function esUltimaSemana(){
   const diasDelMes = new Date(Date.UTC(anio, mes, 0)).getUTCDate();
   return hoy.diaMes > diasDelMes - 7;
 }
-const pastasDisponibles = () => MENU.pastas.filter(p => !p.soloUltimaSemana || esUltimaSemana());
+// días sueltos en que los ñoquis entran igual, fuera de la última semana del mes
+const NOQUIS_EXTRA = ['2026-11-06'];
+
+// cartel de la portada, solo en estas fechas
+const AVISOS_PORTADA = {
+  '2026-11-06': {
+    titulo: 'hoy, los ñoquis de papa',
+    texto: 'Viene el Papa y nos quedamos hasta las 23:00. Ñoquis caseros en la carta, por única vez fuera de fin de mes.'
+  }
+};
+
+const hayNoquis = () => esUltimaSemana() || NOQUIS_EXTRA.includes(horaEnMontevideo().fecha);
+const pastasDisponibles = () => MENU.pastas.filter(p => !p.soloUltimaSemana || hayNoquis());
 
 const sel = {
   pastaId: pastasDisponibles()[0].id,
@@ -2079,12 +2124,16 @@ const pesos = n => '$' + n.toLocaleString('es-UY');
 const buscar = (lista, id) => lista.find(x => x.id === id);
 
 /* ---------- render de los pasos ---------- */
+// fuera de la última semana, los ñoquis están por una excepción: el badge lo dice
+const badgeDe = pasta =>
+  pasta.soloUltimaSemana && !esUltimaSemana() ? 'solo hoy' : pasta.badge;
+
 function pintarPastas(){
   document.getElementById('opciones-pasta').innerHTML = pastasDisponibles().map(p => `
     <label class="op-pasta">
       <input type="radio" name="pasta" value="${p.id}" ${p.id === sel.pastaId ? 'checked' : ''} />
       <img src="${p.foto}" alt="${p.alt}" width="800" height="600" loading="lazy" />
-      ${p.badge ? `<span class="op-badge">${p.badge}</span>` : ''}
+      ${badgeDe(p) ? `<span class="op-badge">${badgeDe(p)}</span>` : ''}
       <span class="op-check" aria-hidden="true">✓</span>
       <span class="op-cuerpo">
         <span class="op-nombre">${p.nombre}</span>
@@ -2168,10 +2217,22 @@ function horaValida(){
   return problema === '';
 }
 
+function pintarAvisoPortada(){
+  const cont = document.getElementById('aviso-portada');
+  const aviso = AVISOS_PORTADA[horaEnMontevideo().fecha];
+  if (!aviso){
+    cont.hidden = true;
+    return;
+  }
+  cont.hidden = false;
+  document.getElementById('aviso-titulo').textContent = aviso.titulo;
+  document.getElementById('aviso-texto').textContent = aviso.texto;
+}
+
 function pintarNotaNoquis(){
   const nota = document.getElementById('nota-noquis');
   const noquis = MENU.pastas.find(p => p.soloUltimaSemana);
-  if (!noquis || esUltimaSemana()){
+  if (!noquis || hayNoquis()){
     nota.hidden = true;
     return;
   }
@@ -2450,6 +2511,7 @@ pintarPastas();
 pintarVariantes();
 pintarAlfredo();
 pintarNotaNoquis();
+pintarAvisoPortada();
 pintarCampoHora();
 pintarSalsas();
 pintarChips('chips-toppings', MENU.toppings, 'toppings');
