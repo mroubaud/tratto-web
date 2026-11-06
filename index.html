@@ -468,6 +468,21 @@
     box-shadow: 0 22px 50px rgba(137,30,30,0.25);
     display: block;
   }
+  /* sello con la mitra, solo en las fechas que lo piden */
+  .sello-mitra{
+    position: absolute;
+    right: -18px;
+    top: 26px;
+    width: 92px;
+    height: 92px;
+    padding: 14px;
+    border-radius: 50%;
+    background: var(--amarillo);
+    box-shadow: 0 10px 24px rgba(137,30,30,0.28);
+    transform: rotate(8deg);
+  }
+  .sello-mitra[hidden]{ display: none; }
+
   .hero-foto .sello{
     position: absolute;
     left: -22px;
@@ -1451,6 +1466,7 @@
     .hero-cta-group{ justify-content: center; }
     .hero-foto{ max-width: 380px; width: 100%; order: -1; }
     .hero-foto .sello{ left: -10px; bottom: 14px; width: 96px; height: 96px; font-size: 18px; }
+    .sello-mitra{ right: -6px; top: 14px; width: 72px; height: 72px; padding: 11px; }
     .historia-grid{ grid-template-columns: 1fr; gap: 34px; text-align: center; }
     .historia-foto{ order: -1; }
   }
@@ -1579,9 +1595,16 @@
     </div>
 
     <div class="hero-foto">
-      <img src="fotos/hero-pasta.jpg"
+      <img src="fotos/hero-pasta.jpg" id="hero-img"
            alt="Tenedor con fetuccini fresco de Tratto Pastas y milanesa de pollo"
            width="1000" height="1250" fetchpriority="high" />
+      <!-- sello con la mitra, lo enciende el aviso del día -->
+      <svg class="sello-mitra" id="sello-mitra" viewBox="0 0 60 60" fill="none"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden>
+        <path d="M30 7 C 13 25, 9 39, 11 48 L49 48 C51 39, 47 25, 30 7 Z" fill="#891e1e" stroke="#891e1e" stroke-width="2.4"/>
+        <path d="M30 17 L30 43 M19 32 L41 32" stroke="#fbf2b3" stroke-width="3.2"/>
+        <rect x="8" y="47" width="44" height="8" rx="4" fill="#891e1e"/>
+      </svg>
       <span class="sello">retiro<br/>en el<br/>local</span>
     </div>
   </div>
@@ -2133,6 +2156,8 @@ const NOQUIS_EXTRA = ['2026-11-06'];
 const AVISOS_PORTADA = {
   '2026-11-06': {
     ilustracion: true,
+    foto: 'fotos/hero-noquis.jpg',
+    fotoAlt: 'Vaso de Tratto con ñoquis caseros al pesto y un ñoqui en el tenedor',
     titulo: 'hoy, los ñoquis de papa',
     texto: 'Viene el Papa y nos quedamos hasta las 23:00. Ñoquis caseros en la carta, por única vez fuera de fin de mes.'
   }
@@ -2252,6 +2277,14 @@ function horaValida(){
 function pintarAvisoPortada(){
   const cont = document.getElementById('aviso-portada');
   const aviso = AVISOS_PORTADA[horaEnMontevideo().fecha];
+
+  document.getElementById('sello-mitra').toggleAttribute('hidden', !(aviso && aviso.ilustracion));
+  if (aviso && aviso.foto){
+    const img = document.getElementById('hero-img');
+    img.src = aviso.foto;
+    img.alt = aviso.fotoAlt || '';
+  }
+
   if (!aviso){
     cont.hidden = true;
     return;
