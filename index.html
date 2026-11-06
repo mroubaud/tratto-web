@@ -411,6 +411,9 @@
 
   /* cartel de portada para una fecha puntual */
   .aviso-portada{
+    display: flex;
+    align-items: center;
+    gap: 16px;
     margin: 22px 0 4px;
     padding: 16px 20px;
     max-width: 520px;
@@ -421,6 +424,14 @@
     box-shadow: 0 10px 24px rgba(137,30,30,0.22);
     animation: fadeUp 1s ease-out .4s both;
   }
+  .aviso-ilustracion{
+    flex: 0 0 auto;
+    width: 88px;
+    height: 88px;
+  }
+  /* sin esto el texto no baja de su ancho mínimo y el cartel estira toda la portada */
+  .aviso-portada > div{ min-width: 0; }
+  .aviso-ilustracion[hidden]{ display: none; }
   .aviso-portada[hidden]{ display: none; }
   .aviso-titulo{
     font-family: 'Ribes', sans-serif;
@@ -1435,6 +1446,8 @@
       justify-items: center;
     }
     .hero-sub{ margin: 0 auto; }
+    .aviso-portada{ margin-left: auto; margin-right: auto; }
+    .aviso-ilustracion{ width: 62px; height: 62px; }
     .hero-cta-group{ justify-content: center; }
     .hero-foto{ max-width: 380px; width: 100%; order: -1; }
     .hero-foto .sello{ left: -10px; bottom: 14px; width: 96px; height: 96px; font-size: 18px; }
@@ -1537,8 +1550,26 @@
 
       <!-- cartel que solo aparece en las fechas de AVISOS_PORTADA -->
       <div class="aviso-portada" id="aviso-portada" hidden>
-        <p class="aviso-titulo" id="aviso-titulo"></p>
-        <p class="aviso-texto" id="aviso-texto"></p>
+        <!-- mitra sobre el vaso de Tratto · dibujo propio, se muestra si el aviso lo pide -->
+        <svg class="aviso-ilustracion" id="aviso-ilustracion" viewBox="0 0 120 120" fill="none"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden>
+          <path d="M60 12 C 47 29, 43 44, 45 55 L75 55 C77 44, 73 29, 60 12 Z" fill="#fbf2b3" stroke="#fbf2b3" stroke-width="2.5"/>
+          <path d="M60 21 L60 50 M50 39 L70 39" stroke="#891e1e" stroke-width="2.8"/>
+          <rect x="42" y="54" width="36" height="7" rx="3.5" fill="#fbf2b3"/>
+          <path d="M28 64 L35.5 103 C36.2 106.8, 39.5 109.5, 43.4 109.5 L76.6 109.5 C80.5 109.5, 83.8 106.8, 84.5 103 L92 64 Z" stroke="#fbf2b3" stroke-width="3.2"/>
+          <path d="M28 64 L92 64" stroke="#fbf2b3" stroke-width="3.2"/>
+          <g fill="#fbf2b3">
+            <ellipse cx="41" cy="78" rx="8.4" ry="6.8"/>
+            <ellipse cx="60" cy="76" rx="8.4" ry="6.8"/>
+            <ellipse cx="79" cy="78" rx="8.4" ry="6.8"/>
+            <ellipse cx="50" cy="93" rx="8.4" ry="6.8"/>
+            <ellipse cx="70" cy="93" rx="8.4" ry="6.8"/>
+          </g>
+        </svg>
+        <div>
+          <p class="aviso-titulo" id="aviso-titulo"></p>
+          <p class="aviso-texto" id="aviso-texto"></p>
+        </div>
       </div>
 
       <div class="hero-cta-group">
@@ -2101,6 +2132,7 @@ const NOQUIS_EXTRA = ['2026-11-06'];
 // cartel de la portada, solo en estas fechas
 const AVISOS_PORTADA = {
   '2026-11-06': {
+    ilustracion: true,
     titulo: 'hoy, los ñoquis de papa',
     texto: 'Viene el Papa y nos quedamos hasta las 23:00. Ñoquis caseros en la carta, por única vez fuera de fin de mes.'
   }
@@ -2225,6 +2257,8 @@ function pintarAvisoPortada(){
     return;
   }
   cont.hidden = false;
+  // es un <svg>: .hidden no se refleja como en HTML, hay que tocar el atributo
+  document.getElementById('aviso-ilustracion').toggleAttribute('hidden', !aviso.ilustracion);
   document.getElementById('aviso-titulo').textContent = aviso.titulo;
   document.getElementById('aviso-texto').textContent = aviso.texto;
 }
