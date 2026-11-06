@@ -87,11 +87,11 @@
     },
     {
       "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Sunday"],
+      "dayOfWeek": ["Friday"],
       "opens": "11:30",
-      "closes": "16:00",
-      "validFrom": "2026-10-04",
-      "validThrough": "2026-10-04"
+      "closes": "23:00",
+      "validFrom": "2026-11-06",
+      "validThrough": "2026-11-06"
     }
   ],
   "sameAs": [
@@ -1884,12 +1884,13 @@ const salsasDe = pasta => pasta.salsasIncluidas
 const APERTURA = 11 * 60 + 30;   // 11:30
 const CIERRE   = 15 * 60 + 30;  // 15:30
 
-// días puntuales en que estiramos o recortamos el cierre (AAAA-MM-DD → minutos)
+// días puntuales en que estiramos o recortamos el cierre. El motivo se anuncia
+// en "visitanos" la semana previa. Se pueden dejar vencidos: solo cuentan los de hoy en adelante.
 const CIERRES_ESPECIALES = {
-  '2026-10-04': 16 * 60 + 0   // Día del Patrimonio: hasta las 16:00
+  '2026-11-06': { cierre: 23 * 60 + 0, motivo: 'por la llegada del Papa' }
 };
 
-const cierreDe = fecha => CIERRES_ESPECIALES[fecha] || CIERRE;
+const cierreDe = fecha => (CIERRES_ESPECIALES[fecha] || {}).cierre || CIERRE;
 const comoHora = m => Math.floor(m / 60) + ':' + String(m % 60).padStart(2, '0');
 
 // feriados no laborables en Uruguay (ley 16.805): cerramos siempre.
@@ -2013,8 +2014,14 @@ function pintarHorarioExtra(){
   const manana = corrido(1);
   const hasta = corrido(7);
 
-  const aperturas = Object.assign({}, aperturasDe(anio), aperturasDe(anio + 1));
-  const proximas = Object.keys(aperturas).filter(f => f >= hoy && f <= hasta).sort();
+  // los días que abrimos fuera del lunes-a-sábado y los que tienen horario distinto
+  const eventos = {};
+  for (const anio2 of [anio, anio + 1]){
+    for (const f of Object.keys(aperturasDe(anio2))) eventos[f] = aperturasDe(anio2)[f];
+  }
+  for (const f of Object.keys(CIERRES_ESPECIALES)) eventos[f] = CIERRES_ESPECIALES[f].motivo;
+
+  const proximas = Object.keys(eventos).filter(f => f >= hoy && f <= hasta).sort();
   if (!proximas.length){
     cont.hidden = true;
     return;
@@ -2024,10 +2031,8 @@ function pintarHorarioExtra(){
     const d = new Date(f + 'T12:00:00Z');
     const cuando = (f === hoy ? 'hoy ' : f === manana ? 'mañana ' : 'el ') +
       NOMBRE_DIA[(d.getUTCDay() + 6) % 7 + 1] + ' ' + d.getUTCDate() + '/' + (d.getUTCMonth() + 1);
-    const horario = CIERRES_ESPECIALES[f]
-      ? 'de ' + comoHora(APERTURA) + ' a ' + comoHora(CIERRES_ESPECIALES[f])
-      : 'en el mismo horario';
-    return 'Además abrimos ' + cuando + (aperturas[f] ? ' ' + aperturas[f] : '') + ', ' + horario + '.';
+    const horario = 'de ' + comoHora(APERTURA) + ' a ' + comoHora(cierreDe(f));
+    return 'Abrimos ' + cuando + ' ' + horario + (eventos[f] ? ' ' + eventos[f] : '') + '.';
   }).join(' ');
 }
 
