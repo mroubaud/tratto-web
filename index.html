@@ -6,7 +6,7 @@
 
 <!-- ===== SEO BÁSICO ===== -->
 <title>Tratto Pastas · Pasta fresca artesanal en Montevideo Centro</title>
-<meta name="description" content="Pasta fresca artesanal en el Centro de Montevideo. Armá tu plato en la web —fetuccini, cappellettis de calabaza, caramelle de boniato y milanesa con salsas caseras—, mandalo por WhatsApp y pasá a buscarlo. Lunes a sábados de 11:30 a 15:30." />
+<meta name="description" content="Pasta fresca artesanal en el Centro de Montevideo. Armá tu plato en la web —fetuccini, cappellettis de calabaza, caramelle de boniato y milanesa con salsas caseras—, mandalo por WhatsApp y pasá a buscarlo. Lunes a sábados de 11:30 a 15:30 y domingos de 12:00 a 16:00." />
 <meta name="keywords" content="pasta fresca Montevideo, fetuccini artesanal, pastas caseras Centro Montevideo, pastería Uruguay, pasta para llevar Montevideo, Tratto pastas" />
 <meta name="author" content="Tratto Pastas" />
 <meta name="robots" content="index, follow" />
@@ -87,11 +87,9 @@
     },
     {
       "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Friday"],
-      "opens": "11:30",
-      "closes": "23:00",
-      "validFrom": "2026-11-06",
-      "validThrough": "2026-11-06"
+      "dayOfWeek": ["Sunday"],
+      "opens": "12:00",
+      "closes": "16:00"
     }
   ],
   "sameAs": [
@@ -1530,7 +1528,7 @@
 <nav>
   <div class="nav-izq">
     <a href="#inicio"><img src="tratto-logo.svg" alt="Tratto Pastas - Pasta fresca artesanal Montevideo" class="logo-mini" /></a>
-    <!-- Indicador abierto / cerrado · se calcula con el horario del local (lun-sáb 11:30-15:30, más feriados y aperturas sueltas) -->
+    <!-- Indicador abierto / cerrado · se calcula con el horario del local (lun-sáb 11:30-15:30, domingos 12:00-16:00, menos feriados) -->
     <span class="estado" id="estado" role="status" aria-live="polite">
       <span class="punto" aria-hidden="true"></span>
       <span class="estado-texto">—</span>
@@ -1779,7 +1777,7 @@
 
       <div class="info-item">
         <h4>🕐 horario</h4>
-        <p>Lunes a sábados<br/>de 11:30 a 15:30</p>
+        <p>Lunes a sábados<br/>de 11:30 a 15:30<br/><br/>Domingos<br/>de 12:00 a 16:00</p>
         <p class="horario-nota">Cerramos los feriados no laborables y el Día del Gastronómico.</p>
         <p class="horario-extra" id="horario-extra" hidden></p>
       </div>
@@ -1975,8 +1973,14 @@ const salsasDe = pasta => pasta.salsasIncluidas
   : MENU.salsas;
 
 /* ---------- horario del local ---------- */
-const APERTURA = 11 * 60 + 30;   // 11:30
-const CIERRE   = 15 * 60 + 30;  // 15:30
+// horario habitual. Los domingos abrimos más tarde y cerramos más tarde que el resto.
+const HORARIO_SEMANA  = { abre: 11 * 60 + 30, cierra: 15 * 60 + 30 };   // lunes a sábado
+const HORARIO_DOMINGO = { abre: 12 * 60,      cierra: 16 * 60      };   // domingos
+
+// 1 lunes … 7 domingo, a partir de una fecha AAAA-MM-DD
+const diaDeFecha = fecha => (new Date(fecha + 'T12:00:00Z').getUTCDay() + 6) % 7 + 1;
+const horarioDe  = fecha => diaDeFecha(fecha) === 7 ? HORARIO_DOMINGO : HORARIO_SEMANA;
+const aperturaDe = fecha => horarioDe(fecha).abre;
 
 // días puntuales en que estiramos o recortamos el cierre. El motivo se anuncia
 // en "visitanos" la semana previa. Se pueden dejar vencidos: solo cuentan los de hoy en adelante.
@@ -1984,7 +1988,7 @@ const CIERRES_ESPECIALES = {
   '2026-11-06': { cierre: 23 * 60 + 0, motivo: 'por la llegada del Papa' }
 };
 
-const cierreDe = fecha => (CIERRES_ESPECIALES[fecha] || {}).cierre || CIERRE;
+const cierreDe = fecha => (CIERRES_ESPECIALES[fecha] || {}).cierre || horarioDe(fecha).cierra;
 const comoHora = m => Math.floor(m / 60) + ':' + String(m % 60).padStart(2, '0');
 
 // feriados no laborables en Uruguay (ley 16.805): cerramos siempre.
@@ -1996,28 +2000,6 @@ const FERIADOS = {
   '08-25': 'Declaratoria de la Independencia',
   '12-25': 'Navidad'
 };
-
-// días sueltos en que abrimos fuera del lunes-a-sábado, como fecha de Montevideo
-// (AAAA-MM-DD) y motivo. Se pueden dejar vencidos: solo cuentan los de hoy en adelante.
-const APERTURAS_EXTRA = {
-  // '2026-12-06': 'por las fiestas'
-};
-
-// el domingo del Día del Patrimonio abrimos todos los años. Es el domingo que sigue al
-// primer sábado de octubre, que no siempre es el primer domingo: en 2023, con el 1º en
-// domingo, cayó el 8. La fecha la fija la Comisión del Patrimonio, así que si algún año
-// la corren hay que sumarla a mano acá arriba.
-function domingoDePatrimonio(anio){
-  const primeroDeOctubre = new Date(Date.UTC(anio, 9, 1)).getUTCDay();   // 0 domingo … 6 sábado
-  const primerSabado = 1 + (6 - primeroDeOctubre + 7) % 7;
-  return anio + '-10-' + String(primerSabado + 1).padStart(2, '0');
-}
-
-// las aperturas fuera del lunes-a-sábado de un año, como { fecha: motivo }
-const aperturasDe = anio => Object.assign(
-  { [domingoDePatrimonio(anio)]: 'por el Día del Patrimonio' },
-  APERTURAS_EXTRA
-);
 
 const NOMBRE_DIA = ['', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
 
@@ -2053,44 +2035,44 @@ function feriadoDe(fecha){
   return FERIADOS[mmdd];
 }
 
-// abrimos de lunes a sábado, más las aperturas sueltas; los feriados pesan sobre las dos
-const abrimosEl = (dia, fecha) =>
-  !feriadoDe(fecha) &&
-  ((dia >= 1 && dia <= 6) || fecha in aperturasDe(parseInt(fecha.slice(0, 4), 10)));
+// abrimos todos los días; lo único que nos cierra son los feriados
+const abrimosEl = (dia, fecha) => !feriadoDe(fecha);
 
-// cómo nombrar el próximo día en que abrimos: "mañana" o "el martes"
+// el próximo día en que abrimos: su fecha y cómo nombrarlo ("mañana", "el martes")
 function proximoDiaAbierto(fecha, dia){
   for (let i = 1; i <= 7; i++){
     const d = new Date(fecha + 'T12:00:00Z');
     d.setUTCDate(d.getUTCDate() + i);
+    const iso = d.toISOString().slice(0, 10);
     const diaSemana = (dia + i - 1) % 7 + 1;
-    if (abrimosEl(diaSemana, d.toISOString().slice(0, 10))){
-      return i === 1 ? 'mañana' : 'el ' + NOMBRE_DIA[diaSemana];
+    if (abrimosEl(diaSemana, iso)){
+      return { fecha: iso, cuando: i === 1 ? 'mañana' : 'el ' + NOMBRE_DIA[diaSemana] };
     }
   }
-  return 'el lunes';
+  return { fecha: fecha, cuando: 'el lunes' };
 }
 
 function estadoLocal(){
   const { dia, fecha, minutos } = horaEnMontevideo();
-  const abre = comoHora(APERTURA);
+  const abre = comoHora(aperturaDe(fecha));
 
   if (abrimosEl(dia, fecha)){
-    if (minutos >= APERTURA && minutos < cierreDe(fecha)){
+    if (minutos >= aperturaDe(fecha) && minutos < cierreDe(fecha)){
       return { abierto: true, texto: 'abierto ahora', detalle: '· hasta las ' + comoHora(cierreDe(fecha)) };
     }
-    if (minutos < APERTURA){
+    if (minutos < aperturaDe(fecha)){
       return { abierto: false, texto: 'cerrado', detalle: '· abrimos hoy ' + abre, proximo: 'hoy a las ' + abre };
     }
   }
-  // ya cerramos, o hoy no abrimos: buscamos el próximo día que sí
-  const cuando = proximoDiaAbierto(fecha, dia);
+  // ya cerramos, o hoy no abrimos: buscamos el próximo día que sí, con SU horario
+  const prox = proximoDiaAbierto(fecha, dia);
+  const abreProx = comoHora(aperturaDe(prox.fecha));
   const feriado = feriadoDe(fecha);
   return {
     abierto: false,
     texto: 'cerrado',
-    detalle: feriado ? '· ' + feriado : '· abrimos ' + cuando + ' ' + abre,
-    proximo: cuando + ' a las ' + abre
+    detalle: feriado ? '· ' + feriado : '· abrimos ' + prox.cuando + ' ' + abreProx,
+    proximo: prox.cuando + ' a las ' + abreProx
   };
 }
 
@@ -2108,11 +2090,8 @@ function pintarHorarioExtra(){
   const manana = corrido(1);
   const hasta = corrido(7);
 
-  // los días que abrimos fuera del lunes-a-sábado y los que tienen horario distinto
+  // los días con un horario distinto al de siempre
   const eventos = {};
-  for (const anio2 of [anio, anio + 1]){
-    for (const f of Object.keys(aperturasDe(anio2))) eventos[f] = aperturasDe(anio2)[f];
-  }
   for (const f of Object.keys(CIERRES_ESPECIALES)) eventos[f] = CIERRES_ESPECIALES[f].motivo;
 
   const proximas = Object.keys(eventos).filter(f => f >= hoy && f <= hasta).sort();
@@ -2125,7 +2104,7 @@ function pintarHorarioExtra(){
     const d = new Date(f + 'T12:00:00Z');
     const cuando = (f === hoy ? 'hoy ' : f === manana ? 'mañana ' : 'el ') +
       NOMBRE_DIA[(d.getUTCDay() + 6) % 7 + 1] + ' ' + d.getUTCDate() + '/' + (d.getUTCMonth() + 1);
-    const horario = 'de ' + comoHora(APERTURA) + ' a ' + comoHora(cierreDe(f));
+    const horario = 'de ' + comoHora(aperturaDe(f)) + ' a ' + comoHora(cierreDe(f));
     return 'Abrimos ' + cuando + ' ' + horario + (eventos[f] ? ' ' + eventos[f] : '') + '.';
   }).join(' ');
 }
@@ -2253,16 +2232,18 @@ function pintarCampoHora(){
   const { fecha } = horaEnMontevideo();
   const hora = document.getElementById('hora');
   const hhmm = m => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
-  hora.min = hhmm(APERTURA);
+  hora.min = hhmm(aperturaDe(fecha));
   hora.max = hhmm(cierreDe(fecha));
   document.getElementById('hora-rango').textContent =
-    '(entre ' + comoHora(APERTURA) + ' y ' + comoHora(cierreDe(fecha)) + ')';
+    '(entre ' + comoHora(aperturaDe(fecha)) + ' y ' + comoHora(cierreDe(fecha)) + ')';
 }
 
 function horaValida(){
   const hora = document.getElementById('hora');
   const error = document.getElementById('hora-error');
-  const cierre = cierreDe(horaEnMontevideo().fecha);
+  const fechaHoy = horaEnMontevideo().fecha;
+  const apertura = aperturaDe(fechaHoy);
+  const cierre = cierreDe(fechaHoy);
 
   let problema = '';
   if (hora.value === ''){
@@ -2271,8 +2252,8 @@ function horaValida(){
     const [h, m] = hora.value.split(':').map(Number);
     const minutos = h * 60 + m;
     // la hora de cierre entra: es el último momento para pasar a buscarlo
-    if (minutos < APERTURA || minutos > cierre){
-      problema = 'Atendemos de ' + comoHora(APERTURA) + ' a ' + comoHora(cierre) + '.';
+    if (minutos < apertura || minutos > cierre){
+      problema = 'Atendemos de ' + comoHora(apertura) + ' a ' + comoHora(cierre) + '.';
     }
   }
   error.textContent = problema;
