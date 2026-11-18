@@ -89,7 +89,8 @@
       "@type": "OpeningHoursSpecification",
       "dayOfWeek": ["Sunday"],
       "opens": "12:00",
-      "closes": "16:00"
+      "closes": "16:00",
+      "validFrom": "2026-12-06"
     }
   ],
   "sameAs": [
@@ -1777,7 +1778,7 @@
 
       <div class="info-item">
         <h4>🕐 horario</h4>
-        <p>Lunes a sábados<br/>de 11:30 a 15:30<br/><br/>Domingos<br/>de 12:00 a 16:00</p>
+        <p>Lunes a sábados<br/>de 11:30 a 15:30<br/><br/>Domingos<br/>de 12:00 a 16:00<span id="domingos-desde"></span></p>
         <p class="horario-nota">Cerramos los feriados no laborables y el Día del Gastronómico.</p>
         <p class="horario-extra" id="horario-extra" hidden></p>
       </div>
@@ -1978,6 +1979,9 @@ const salsasDe = pasta => pasta.salsasIncluidas
 const HORARIO_SEMANA  = { abre: 11 * 60 + 30, cierra: 15 * 60 + 30 };   // lunes a sábado
 const HORARIO_DOMINGO = { abre: 12 * 60,      cierra: 16 * 60      };   // domingos
 
+// el primer domingo que abrimos. Antes de esta fecha los domingos cerramos.
+const DOMINGOS_DESDE = '2026-12-06';
+
 // 1 lunes … 7 domingo, a partir de una fecha AAAA-MM-DD
 const diaDeFecha = fecha => (new Date(fecha + 'T12:00:00Z').getUTCDay() + 6) % 7 + 1;
 const horarioDe  = fecha => diaDeFecha(fecha) === 7 ? HORARIO_DOMINGO : HORARIO_SEMANA;
@@ -2036,8 +2040,9 @@ function feriadoDe(fecha){
   return FERIADOS[mmdd];
 }
 
-// abrimos todos los días; lo único que nos cierra son los feriados
-const abrimosEl = (dia, fecha) => !feriadoDe(fecha);
+// abrimos todos los días, salvo los feriados y los domingos previos a DOMINGOS_DESDE
+const abrimosEl = (dia, fecha) =>
+  !feriadoDe(fecha) && (dia !== 7 || fecha >= DOMINGOS_DESDE);
 
 // el próximo día en que abrimos: su fecha y cómo nombrarlo ("mañana", "el martes")
 function proximoDiaAbierto(fecha, dia){
@@ -2261,6 +2266,17 @@ function horaValida(){
   error.hidden = problema === '';
   hora.classList.toggle('invalido', problema !== '');
   return problema === '';
+}
+
+// mientras falte para el primer domingo abierto, el horario lo aclara
+function pintarDomingosDesde(){
+  const span = document.getElementById('domingos-desde');
+  if (horaEnMontevideo().fecha >= DOMINGOS_DESDE){
+    span.textContent = '';
+    return;
+  }
+  const d = new Date(DOMINGOS_DESDE + 'T12:00:00Z');
+  span.textContent = ' (a partir del ' + d.getUTCDate() + '/' + (d.getUTCMonth() + 1) + ')';
 }
 
 const telefonoDeHoy = () =>
@@ -2582,6 +2598,7 @@ pintarAlfredo();
 pintarNotaNoquis();
 pintarAvisoPortada();
 pintarTelefono();
+pintarDomingosDesde();
 pintarCampoHora();
 pintarSalsas();
 pintarChips('chips-toppings', MENU.toppings, 'toppings');
