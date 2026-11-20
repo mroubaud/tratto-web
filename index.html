@@ -1882,13 +1882,13 @@
 const TEL_WA = '59899449692';
 const TEL_VISIBLE = '099 449 692';
 
-// días en que atendemos por el WhatsApp de Yan (AAAA-MM-DD, fecha de Montevideo).
-// Se pueden dejar vencidos: solo cuenta el de hoy.
-const TELEFONOS_ESPECIALES = {
-  '2026-11-16': { numero: '59898228306', visible: '098 228 306' },
-  '2026-11-17': { numero: '59898228306', visible: '098 228 306' },
-  '2026-11-18': { numero: '59898228306', visible: '098 228 306' }
-};
+// períodos en que atendemos por el WhatsApp de Yan (AAAA-MM-DD, fechas de
+// Montevideo, ambas incluidas). Se pueden dejar vencidos: solo cuenta el de hoy.
+const TEL_YAN = { numero: '59898228306', visible: '098 228 306' };
+const TELEFONOS_ESPECIALES = [
+  { desde: '2026-11-16', hasta: '2026-11-18', ...TEL_YAN },
+  { desde: '2026-11-20', hasta: '2026-11-27', ...TEL_YAN }
+];
 
 const MENU = {
   pastas: [
@@ -2280,8 +2280,11 @@ function pintarDomingosDesde(){
   span.textContent = ' (a partir del ' + d.getUTCDate() + '/' + (d.getUTCMonth() + 1) + ')';
 }
 
-const telefonoDeHoy = () =>
-  TELEFONOS_ESPECIALES[horaEnMontevideo().fecha] || { numero: TEL_WA, visible: TEL_VISIBLE };
+const telefonoDeHoy = () => {
+  const hoy = horaEnMontevideo().fecha;
+  return TELEFONOS_ESPECIALES.find(p => hoy >= p.desde && hoy <= p.hasta)
+      || { numero: TEL_WA, visible: TEL_VISIBLE };
+};
 
 // deja los enlaces de WhatsApp apuntando al número que atiende hoy
 function pintarTelefono(){
